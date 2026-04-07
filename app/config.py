@@ -17,12 +17,15 @@ class Settings(BaseSettings):
     anthropic_api_key: Optional[str] = None
     claude_model: str = "claude-sonnet-4-20250514"
 
-    # Supabase
-    supabase_url: Optional[str] = None
-    supabase_key: Optional[str] = None
+    # Airtable
+    airtable_api_key: Optional[str] = None
+    airtable_base_id: Optional[str] = None
+    airtable_clients_table: str = "Clients"
+    airtable_conversations_table: str = "Conversations"
+    airtable_messages_table: str = "Messages"
 
     # Practice area
-    default_practice_area: str = "immigration"
+    default_practice_area: str = "roque_law"
 
     # Server
     port: int = 8080
@@ -35,6 +38,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 # Singleton

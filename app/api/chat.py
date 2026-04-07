@@ -29,20 +29,8 @@ async def execute_tool(tool_name: str, args: dict, client_id: str, conversation_
         return await execute(args)
 
     elif tool_name == "create_case":
-        # Get the conversation to find the practice area
-        convo = await conversation_service.get_conversation(conversation_id)
-        practice_area = convo.get("practice_area", settings.default_practice_area) if convo else settings.default_practice_area
-        case = await case_service.create_case(
-            client_id=client_id,
-            practice_area=practice_area,
-            title=args.get("title"),
-            description=args.get("description"),
-        )
-        # Link the conversation to this case
-        from app.services.supabase_client import get_supabase
-        sb = get_supabase()
-        sb.table("chatbot_conversations").update({"case_id": case["id"]}).eq("id", conversation_id).execute()
-        return {"status": "case_created", "case_id": case["id"]}
+        # Stubbed — Roque Law intake doesn't use a cases table.
+        return {"status": "noop"}
 
     else:
         return {"error": f"Unknown tool: {tool_name}"}

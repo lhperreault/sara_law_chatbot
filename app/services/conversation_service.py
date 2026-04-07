@@ -1,105 +1,124 @@
 """
-Conversation service — create conversations, load/save messages.
+Conversation service — create conversations, load/save messages in Airtable.
 """
+import json
+import uuid
 from typing import Optional, List, Dict, Any
-from app.services.supabase_client import get_supabase
+from pyairtable.formulas import match
+from app.services.airtable_client import conversations_table, messages_table
+
+
+def _convo_to_dict(rec: Dict[str, Any]) -> Dict[str, Any]:
+    f = rec.get("fields", {})
+    return {
+        "id": rec["id"],
+        "conversation_id": f.get("Conversation ID"),
+        "practice_area": f.get("Practice Area"),
+        "channel": f.get("Channel"),
+        "status": f.get("Status"),
+        "client_id": (f.get("Client") or [None])[0],
+    }
 
 
 async def create_conversation(
     client_id: str,
     practice_area: str,
     channel: str = "website",
-    case_id: Optional[str] = None,
+    case_id: Optional[str] = None,  # kept for API compatibility, ignored
 ) -> Dict[str, Any]:
-    """Create a new conversation. Returns the created row."""
-    sb = get_supabase()
-    data = {
-        "client_id": client_id,
-        "practice_area": practice_area,
-        "channel": channel,
+    fields = {
+        "Conversation ID": str(uuid.uuid4()),
+        "Practice Area": practice_area,
+        "Channel": channel,
+        "Status": "active",
+        "Client": [client_id] if client_id else [],
     }
-    if case_id:
-        data["case_id"] = case_id
-
-    result = sb.table("chatbot_conversations").insert(data).execute()
-    return result.data[0]
+    rec = conversations_table().create(fields)
+    return _convo_to_dict(rec)
 
 
 async def get_conversation(conversation_id: str) -> Optional[Dict[str, Any]]:
-    """Get a conversation by ID."""
-    sb = get_supabase()
-    result = (
-        sb.table("chatbot_conversations")
-        .select("*")
-        .eq("id", conversation_id)
-        .execute()
-    )
-    return result.data[0] if result.data else None
+    if not conversation_id:
+        return None
+    try:
+        rec = conversations_table().get(conversation_id)
+        return _convo_to_dict(rec)
+    except Exception:
+        return None
 
 
 async def get_recent_messages(
     conversation_id: str, limit: int = 20
 ) -> List[Dict[str, Any]]:
-    """Get the most recent messages for a conversation from Supabase."""
-    sb = get_supabase()
-    result = (
-        sb.table("chatbot_messages")
-        .select("role, content, tool_name, tool_args, tool_result, created_at")
-        .eq("conversation_id", conversation_id)
-        .order("created_at", desc=False)
-        .limit(limit)
-        .execute()
+    """Get the most recent messages for a conversation, oldest-first."""
+    if not conversation_id:
+        return []
+    tbl = messages_table()
+    # Filter by linked Conversation record id via FIND on the linked-record array.
+    # Simpler: pull by formula matching the conversation record id string.
+    formula = f"FIND('{conversation_id}', ARRAYJOIN({{Conversation}}))"
+    records = tbl.all(
+        formula=formula,
+        sort=["Created At"],
+        max_records=limit,
     )
-    return result.data or []
+    out = []
+    for r in records:
+        f = r.get("fields", {})
+        out.append(
+            {
+                "role": f.get("Role", "user"),
+                "content": f.get("Content", ""),
+                "tool_name": f.get("Tool Name"),
+                "tool_args": f.get("Tool Args"),
+                "tool_result": f.get("Tool Result"),
+                "created_at": f.get("Created At"),
+            }
+        )
+    return out
 
 
 async def save_messages(
     conversation_id: str,
     messages: List[Dict[str, Any]],
 ) -> None:
-    """Batch insert messages into Supabase."""
-    if not messages:
+    """Batch insert messages into Airtable."""
+    if not messages or not conversation_id:
         return
-    sb = get_supabase()
     rows = []
     for msg in messages:
-        row = {
-            "conversation_id": conversation_id,
-            "role": msg["role"],
-            "content": msg.get("content", ""),
+        fields: Dict[str, Any] = {
+            "Message ID": str(uuid.uuid4()),
+            "Role": msg.get("role", "user"),
+            "Content": msg.get("content", "") or "",
+            "Conversation": [conversation_id],
         }
-        # Optional fields
         if msg.get("tool_name"):
-            row["tool_name"] = msg["tool_name"]
-        if msg.get("tool_args"):
-            row["tool_args"] = msg["tool_args"]
-        if msg.get("tool_result"):
-            row["tool_result"] = msg["tool_result"]
+            fields["Tool Name"] = msg["tool_name"]
+        if msg.get("tool_args") is not None:
+            fields["Tool Args"] = json.dumps(msg["tool_args"])
+        if msg.get("tool_result") is not None:
+            fields["Tool Result"] = json.dumps(msg["tool_result"])
         if msg.get("requires_review"):
-            row["requires_review"] = True
-            row["review_status"] = "pending_review"
+            fields["Requires Review"] = True
         if msg.get("ai_provider"):
-            row["ai_provider"] = msg["ai_provider"]
+            fields["AI Provider"] = msg["ai_provider"]
         if msg.get("ai_model"):
-            row["ai_model"] = msg["ai_model"]
+            fields["AI Model"] = msg["ai_model"]
         if msg.get("token_count"):
-            row["token_count"] = msg["token_count"]
-        rows.append(row)
+            fields["Tokens"] = msg["token_count"]
+        rows.append({"fields": fields})
 
-    sb.table("chatbot_messages").insert(rows).execute()
+    # pyairtable batch_create accepts list of field dicts
+    messages_table().batch_create([r["fields"] for r in rows])
 
 
 async def get_client_conversations(
     client_id: str, limit: int = 5
 ) -> List[Dict[str, Any]]:
-    """Get recent conversations for a client."""
-    sb = get_supabase()
-    result = (
-        sb.table("chatbot_conversations")
-        .select("id, practice_area, channel, started_at, ended_at, case_id")
-        .eq("client_id", client_id)
-        .order("created_at", desc=True)
-        .limit(limit)
-        .execute()
-    )
-    return result.data or []
+    if not client_id:
+        return []
+    tbl = conversations_table()
+    formula = f"FIND('{client_id}', ARRAYJOIN({{Client}}))"
+    records = tbl.all(formula=formula, max_records=limit)
+    return [_convo_to_dict(r) for r in records]

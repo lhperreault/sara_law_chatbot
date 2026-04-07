@@ -1,17 +1,43 @@
 """
-Client service — lookup, create, and update clients in Supabase.
+Client service — lookup, create, and update clients in Airtable.
+Returns dicts with the same shape the rest of the app expects:
+  { "id", "email", "first_name", "last_name", "phone", "metadata" }
 """
 from typing import Optional, Dict, Any
-from app.services.supabase_client import get_supabase
+from pyairtable.formulas import match
+from app.services.airtable_client import clients_table
+
+
+def _record_to_dict(rec: Dict[str, Any]) -> Dict[str, Any]:
+    f = rec.get("fields", {})
+    name = f.get("Name") or ""
+    first, _, last = name.partition(" ")
+    return {
+        "id": rec["id"],
+        "email": f.get("Email"),
+        "phone": f.get("Phone"),
+        "first_name": first or None,
+        "last_name": last or None,
+        "intake_type": f.get("Intake Type"),
+        "situation": f.get("Situation"),
+        "urgency": f.get("Urgency"),
+        "status": f.get("Status"),
+        "channel": f.get("Channel"),
+        "metadata": {
+            "intake_type": f.get("Intake Type"),
+            "situation": f.get("Situation"),
+            "urgency": f.get("Urgency"),
+            "notes": f.get("Notes"),
+        },
+    }
 
 
 async def lookup_by_email(email: str) -> Optional[Dict[str, Any]]:
-    """Look up a client by email. Returns the client row or None."""
-    sb = get_supabase()
-    result = sb.table("chatbot_clients").select("*").eq("email", email).execute()
-    if result.data and len(result.data) > 0:
-        return result.data[0]
-    return None
+    if not email:
+        return None
+    tbl = clients_table()
+    rec = tbl.first(formula=match({"Email": email}))
+    return _record_to_dict(rec) if rec else None
 
 
 async def create_client(
@@ -21,30 +47,44 @@ async def create_client(
     phone: Optional[str] = None,
     channel: str = "website",
 ) -> Dict[str, Any]:
-    """Create a new client record. Returns the created row."""
-    sb = get_supabase()
-    data = {"email": email, "channel": channel}
-    if first_name:
-        data["first_name"] = first_name
-    if last_name:
-        data["last_name"] = last_name
+    fields: Dict[str, Any] = {"Email": email, "Channel": channel, "Status": "New"}
+    name_parts = [p for p in (first_name, last_name) if p]
+    if name_parts:
+        fields["Name"] = " ".join(name_parts)
     if phone:
-        data["phone"] = phone
-
-    result = sb.table("chatbot_clients").insert(data).execute()
-    return result.data[0]
+        fields["Phone"] = phone
+    rec = clients_table().create(fields)
+    return _record_to_dict(rec)
 
 
 async def update_client(client_id: str, updates: Dict[str, Any]) -> Dict[str, Any]:
-    """Update a client record by ID."""
-    sb = get_supabase()
-    result = (
-        sb.table("chatbot_clients")
-        .update(updates)
-        .eq("id", client_id)
-        .execute()
-    )
-    return result.data[0] if result.data else {}
+    """
+    Accepts the "flat" update dict used by save_client tool:
+    keys like first_name, last_name, phone, metadata (dict).
+    Converts them to Airtable field names.
+    """
+    fields: Dict[str, Any] = {}
+    first = updates.get("first_name")
+    last = updates.get("last_name")
+    if first or last:
+        fields["Name"] = " ".join(p for p in (first, last) if p)
+    if updates.get("phone"):
+        fields["Phone"] = updates["phone"]
+    meta = updates.get("metadata") or {}
+    if meta.get("intake_type"):
+        fields["Intake Type"] = meta["intake_type"]
+    if meta.get("situation") or meta.get("situation_summary"):
+        fields["Situation"] = meta.get("situation") or meta.get("situation_summary")
+    if meta.get("urgency"):
+        fields["Urgency"] = meta["urgency"]
+    if meta.get("notes"):
+        fields["Notes"] = meta["notes"]
+
+    if not fields:
+        return {}
+
+    rec = clients_table().update(client_id, fields)
+    return _record_to_dict(rec)
 
 
 async def get_or_create_client(
@@ -54,10 +94,6 @@ async def get_or_create_client(
     phone: Optional[str] = None,
     channel: str = "website",
 ) -> tuple[Dict[str, Any], bool]:
-    """
-    Look up client by email; create if not found.
-    Returns (client_dict, is_new).
-    """
     existing = await lookup_by_email(email)
     if existing:
         return existing, False
