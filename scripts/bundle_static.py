@@ -27,6 +27,8 @@ def main():
     widget_b64 = encode(PUBLIC / "widget.js")
     logo_path = ROOT / "Logo.png"
     logo_b64 = encode(logo_path) if logo_path.exists() else ""
+    logo_bubble_path = ROOT / "LogoBubble.png"
+    logo_bubble_b64 = encode(logo_bubble_path) if logo_bubble_path.exists() else ""
 
     content = (
         "# Auto-generated from public/ by scripts/bundle_static.py.\n"
@@ -34,12 +36,13 @@ def main():
         "import base64\n\n"
         f"EMBED_HTML = base64.b64decode({embed_b64!r}).decode('utf-8')\n\n"
         f"WIDGET_JS = base64.b64decode({widget_b64!r}).decode('utf-8')\n\n"
-        f"LOGO_PNG = base64.b64decode({logo_b64!r}) if {bool(logo_b64)} else None\n"
+        f"LOGO_PNG = base64.b64decode({logo_b64!r}) if {bool(logo_b64)} else None\n\n"
+        f"LOGO_BUBBLE_PNG = base64.b64decode({logo_bubble_b64!r}) if {bool(logo_bubble_b64)} else None\n"
     )
     OUT.write_text(content, encoding="utf-8")
     print(
         f"[OK] Wrote {OUT} "
-        f"({len(embed_b64)} + {len(widget_b64)} + {len(logo_b64)} base64 chars)"
+        f"({len(embed_b64)} + {len(widget_b64)} + {len(logo_b64)} + {len(logo_bubble_b64)} base64 chars)"
     )
 
 

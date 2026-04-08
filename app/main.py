@@ -53,7 +53,7 @@ app.include_router(chat_router)
 # scripts/bundle_static.py) so that Vercel's @vercel/python runtime bundles
 # them reliably — it only ships files reachable via imports.
 from fastapi.responses import HTMLResponse, Response
-from app.static_assets import EMBED_HTML, WIDGET_JS, LOGO_PNG
+from app.static_assets import EMBED_HTML, WIDGET_JS, LOGO_PNG, LOGO_BUBBLE_PNG
 
 
 @app.get("/")
@@ -81,6 +81,17 @@ async def serve_logo():
         return Response(status_code=404)
     return Response(
         content=LOGO_PNG,
+        media_type="image/png",
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
+
+
+@app.get("/logo-bubble.png")
+async def serve_logo_bubble():
+    if not LOGO_BUBBLE_PNG:
+        return Response(status_code=404)
+    return Response(
+        content=LOGO_BUBBLE_PNG,
         media_type="image/png",
         headers={"Cache-Control": "public, max-age=86400"},
     )

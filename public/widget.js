@@ -25,9 +25,10 @@
   const PRIMARY_COLOR = scriptTag?.getAttribute("data-primary-color") || "#1e3a5f";
   const PRACTICE_AREA = scriptTag?.getAttribute("data-practice-area") || "immigration";
   const SUBTITLE = scriptTag?.getAttribute("data-subtitle") || "Online - usually replies instantly";
-  // Default to the backend-served logo.png. Consumers can override with
-  // data-logo-url to point at their own hosted image.
+  // Default to the backend-served logos. LOGO_URL is the wide wordmark
+  // (header). BUBBLE_LOGO_URL is the square-cropped dog head (floating bubble).
   const LOGO_URL = scriptTag?.getAttribute("data-logo-url") || (ORIGIN + "/logo.png");
+  const BUBBLE_LOGO_URL = scriptTag?.getAttribute("data-bubble-logo-url") || (ORIGIN + "/logo-bubble.png");
 
   // ─── State ────────────────────────────────────────────────────────────────
   const messages = [];
@@ -263,8 +264,8 @@
   const bubble = document.createElement("button");
   bubble.id = "law-chat-bubble";
   bubble.setAttribute("aria-label", "Open chat");
-  if (LOGO_URL) {
-    bubble.innerHTML = '<img src="' + LOGO_URL + '" alt="Chat">';
+  if (BUBBLE_LOGO_URL) {
+    bubble.innerHTML = '<img src="' + BUBBLE_LOGO_URL + '" alt="Chat" onerror="this.parentNode.innerHTML=\'\\u2696\\uFE0F\'">';
   } else {
     bubble.innerHTML = "\u2696\uFE0F"; // Balance scale emoji
   }
@@ -548,8 +549,8 @@
   function closeChat() {
     isOpen = false;
     win.classList.add("law-hidden");
-    if (LOGO_URL) {
-      bubble.innerHTML = '<img src="' + LOGO_URL + '" alt="Chat">';
+    if (BUBBLE_LOGO_URL) {
+      bubble.innerHTML = '<img src="' + BUBBLE_LOGO_URL + '" alt="Chat">';
     } else {
       bubble.innerHTML = "\u2696\uFE0F";
     }
