@@ -64,7 +64,10 @@
   const style = document.createElement("style");
   style.textContent = `
     #law-chat-bubble {
-      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      position: fixed !important;
+      bottom: 24px !important; right: 24px !important;
+      top: auto !important; left: auto !important;
+      z-index: 2147483646 !important;
       width: 64px; height: 64px; border-radius: 50%;
       background: ${PRIMARY_COLOR}; border: none; padding: 0;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
@@ -78,7 +81,10 @@
       width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
     }
     #law-chat-window {
-      position: fixed; bottom: 100px; right: 24px; z-index: 9999;
+      position: fixed !important;
+      bottom: 100px !important; right: 24px !important;
+      top: auto !important; left: auto !important;
+      z-index: 2147483647 !important;
       width: 420px; max-width: calc(100vw - 32px);
       height: 560px; max-height: calc(100vh - 120px);
       background: #fff; border-radius: 16px;
@@ -288,8 +294,12 @@
     </div>
   `;
 
-  document.body.appendChild(bubble);
-  document.body.appendChild(win);
+  // Append to <html> rather than <body> so we escape any ancestor with
+  // `transform`, `filter`, `perspective`, or `will-change` set — those make
+  // `position: fixed` anchor to the ancestor's box instead of the viewport.
+  const mountTarget = document.documentElement || document.body;
+  mountTarget.appendChild(bubble);
+  mountTarget.appendChild(win);
 
   // ─── Element refs ─────────────────────────────────────────────────────────
   const prechatEl = win.querySelector("#law-prechat");
