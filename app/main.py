@@ -18,13 +18,8 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown hooks."""
     print(f"[clientchatbot] Starting up (AI provider: {settings.ai_provider})")
     yield
-    # Shutdown: flush any buffered messages
-    print("[clientchatbot] Shutting down — flushing message buffers...")
-    try:
-        from app.services.memory import conversation_buffer
-        await conversation_buffer.flush_all()
-    except Exception as e:
-        print(f"[clientchatbot] Flush error on shutdown: {e}")
+    # Nothing to do on shutdown — messages are persisted synchronously per
+    # request, so there's no buffer to flush.
 
 
 app = FastAPI(

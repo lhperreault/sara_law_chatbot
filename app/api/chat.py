@@ -12,7 +12,6 @@ from app.ai.factory import get_ai_provider
 from app.prompts.base import build_system_prompt, get_suggestions
 from app.tools.definitions import TOOLS
 from app.services import client_service, conversation_service, case_service
-from app.services.memory import conversation_buffer
 
 router = APIRouter()
 
@@ -57,18 +56,18 @@ async def chat(req: ChatRequest) -> ChatResponse:
             )
             conversation_id = convo["id"]
 
-        # 3. Load recent messages from Supabase + merge buffered messages
-        db_messages = await conversation_service.get_recent_messages(conversation_id, limit=20)
-        buffered = conversation_buffer.get_buffered_messages(conversation_id)
+        # 3. Load the full conversation history from Airtable (sorted by Sequence).
+        # Vercel lambdas are stateless, so we never keep an in-memory buffer —
+        # every message gets persisted immediately before this read.
+        db_messages = await conversation_service.get_recent_messages(conversation_id, limit=50)
+        history = [{"role": m["role"], "content": m["content"]} for m in db_messages]
 
-        # Build message history for AI
-        history = []
-        for msg in db_messages:
-            history.append({"role": msg["role"], "content": msg["content"]})
-        for msg in buffered:
-            history.append({"role": msg["role"], "content": msg.get("content", "")})
-
-        # Add the current user message
+        # Persist the incoming user message RIGHT NOW so the next read sees it,
+        # then append to in-request history.
+        await conversation_service.save_messages(
+            conversation_id,
+            [{"role": "user", "content": req.message}],
+        )
         history.append({"role": "user", "content": req.message})
 
         # 4. Get active cases for context
@@ -116,14 +115,14 @@ async def chat(req: ChatRequest) -> ChatResponse:
                     "content": json.dumps(result),
                 })
 
-                # Save tool call as a message in buffer
-                await conversation_buffer.add_message(conversation_id, {
+                # Persist tool call as a message
+                await conversation_service.save_messages(conversation_id, [{
                     "role": "tool",
                     "content": json.dumps(result),
                     "tool_name": tc["name"],
                     "tool_args": tc["arguments"],
                     "tool_result": result,
-                })
+                }])
 
             # Second AI call with tool results (unless flagged for review)
             if not requires_review:
@@ -181,19 +180,15 @@ async def chat(req: ChatRequest) -> ChatResponse:
         else:
             reply_text = ai_response.content or "I'm sorry, I couldn't generate a response. Please try again."
 
-        # 9. Buffer the user message and assistant reply
-        await conversation_buffer.add_message(conversation_id, {
-            "role": "user",
-            "content": req.message,
-        })
-        await conversation_buffer.add_message(conversation_id, {
+        # 9. Persist the assistant reply (user message was already saved above).
+        await conversation_service.save_messages(conversation_id, [{
             "role": "assistant",
             "content": reply_text,
             "requires_review": requires_review,
             "ai_provider": ai_response.provider,
             "ai_model": ai_response.model,
             "token_count": ai_response.usage.get("total_tokens"),
-        })
+        }])
 
         # 10. Suggestions: disabled. The widget shows its own two-button
         # "Personal Injury / Criminal Defense" choice on the very first turn,

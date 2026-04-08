@@ -2,10 +2,19 @@
 Conversation service — create conversations, load/save messages in Airtable.
 """
 import json
+import time
 import uuid
 from typing import Optional, List, Dict, Any
 from pyairtable.formulas import match
 from app.services.airtable_client import conversations_table, messages_table
+
+
+def _next_sequence() -> int:
+    """Monotonic millisecond-resolution sequence number for message ordering.
+    Since Vercel lambdas are stateless, we can't keep a per-conversation
+    counter in memory — use wall-clock millis as a globally monotonic key
+    that also tolerates parallel requests within the same conversation."""
+    return int(time.time() * 1000)
 
 
 def _convo_to_dict(rec: Dict[str, Any]) -> Dict[str, Any]:
@@ -59,10 +68,9 @@ async def get_recent_messages(
     formula = f"FIND('{conversation_id}', ARRAYJOIN({{Conversation}}))"
     records = tbl.all(
         formula=formula,
+        sort=["Sequence"],
         max_records=limit,
     )
-    # Airtable returns records in insertion order by default; sort newest-first
-    # would be reversed, but chatbot saves in order so this is already chronological.
     out = []
     for r in records:
         f = r.get("fields", {})
@@ -86,11 +94,13 @@ async def save_messages(
     if not messages or not conversation_id:
         return
     rows = []
-    for msg in messages:
+    base_seq = _next_sequence()
+    for i, msg in enumerate(messages):
         fields: Dict[str, Any] = {
             "Message ID": str(uuid.uuid4()),
             "Role": msg.get("role", "user"),
             "Content": msg.get("content", "") or "",
+            "Sequence": base_seq + i,
             "Conversation": [conversation_id],
         }
         if msg.get("tool_name"):
