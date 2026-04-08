@@ -71,13 +71,16 @@
       bottom: 24px !important; right: 24px !important;
       top: auto !important; left: auto !important;
       z-index: 2147483646 !important;
-      width: 64px; height: 64px; border-radius: 50%;
+      width: 88px; height: 88px; border-radius: 50%;
       background: ${PRIMARY_COLOR}; border: none; padding: 0;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.28);
       cursor: pointer; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
       transition: transform 0.2s;
-      font-size: 28px; color: #fff;
+      font-size: 36px; color: #fff;
+    }
+    @media (max-width: 640px) {
+      #law-chat-bubble { width: 64px; height: 64px; font-size: 28px; }
     }
     #law-chat-bubble:hover { transform: scale(1.08); }
     #law-chat-bubble img {
@@ -494,6 +497,23 @@
   bubble.addEventListener("click", function () { isOpen ? closeChat() : openChat(); });
   win.querySelector("#law-chat-close").addEventListener("click", closeChat);
   sendBtn.addEventListener("click", function () { sendMessage(inputEl.value); });
+
+  // Auto-open on desktop once per tab session. Skips mobile (<= 640px) and
+  // does not re-trigger if the visitor has already opened or dismissed it.
+  const AUTO_OPEN_KEY = "law-chat-auto-opened";
+  function maybeAutoOpen() {
+    try {
+      if (sessionStorage.getItem(AUTO_OPEN_KEY)) return;
+    } catch {}
+    if (window.matchMedia && window.matchMedia("(max-width: 640px)").matches) return;
+    try { sessionStorage.setItem(AUTO_OPEN_KEY, "1"); } catch {}
+    setTimeout(openChat, 1200); // small delay so the page renders first
+  }
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    maybeAutoOpen();
+  } else {
+    window.addEventListener("DOMContentLoaded", maybeAutoOpen);
+  }
 
   inputEl.addEventListener("keydown", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
