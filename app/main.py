@@ -50,20 +50,46 @@ app.include_router(clients_router)
 app.include_router(chat_router)
 
 # Static files (widget.js, embed.html, etc.)
-# Mounted at / but FastAPI routers take priority over mounts
-public_dir = Path(__file__).parent.parent / "public"
-if public_dir.exists():
-    app.mount("/static", StaticFiles(directory=str(public_dir)), name="static")
-    # Also serve embed.html at root for convenience
-    from fastapi.responses import FileResponse
+# Routes are registered unconditionally; file lookup tries multiple locations
+# so it works both locally and on Vercel's serverless runtime.
+from fastapi.responses import FileResponse, JSONResponse, Response
 
-    @app.get("/")
-    async def serve_embed():
-        embed_path = public_dir / "embed.html"
-        if embed_path.exists():
-            return FileResponse(str(embed_path))
-        return {"message": "Client Chatbot API", "docs": "/docs"}
+_CANDIDATE_ROOTS = [
+    Path(__file__).parent.parent / "public",         # local dev (project_root/public)
+    Path(__file__).parent.parent / "api" / "public", # bundled next to the lambda
+    Path("/var/task/public"),                        # vercel lambda root
+    Path("/var/task/api/public"),                    # vercel lambda api/public
+    Path(__file__).parent / "public",                # last-ditch fallback
+]
 
-    @app.get("/widget.js")
-    async def serve_widget():
-        return FileResponse(str(public_dir / "widget.js"), media_type="application/javascript")
+
+def _find_static(filename: str) -> Path | None:
+    for root in _CANDIDATE_ROOTS:
+        candidate = root / filename
+        if candidate.exists():
+            return candidate
+    return None
+
+
+@app.get("/")
+async def serve_embed():
+    path = _find_static("embed.html")
+    if path:
+        return FileResponse(str(path))
+    return JSONResponse({"message": "Client Chatbot API", "docs": "/docs"})
+
+
+@app.get("/widget.js")
+async def serve_widget():
+    path = _find_static("widget.js")
+    if path:
+        return FileResponse(str(path), media_type="application/javascript")
+    return Response("// widget.js not found in deployment", status_code=404, media_type="application/javascript")
+
+
+@app.get("/embed.html")
+async def serve_embed_html():
+    path = _find_static("embed.html")
+    if path:
+        return FileResponse(str(path))
+    return JSONResponse({"error": "embed.html not found"}, status_code=404)
