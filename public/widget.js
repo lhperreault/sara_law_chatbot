@@ -276,10 +276,9 @@
       <button id="law-chat-close" aria-label="Close chat">\u2715</button>
     </div>
     <div id="law-prechat">
-      <h3>Welcome</h3>
-      <p>Please enter your email to get started. This helps us provide you with personalized assistance.</p>
-      <input type="email" id="law-prechat-email" placeholder="Your email address *" required>
-      <input type="text" id="law-prechat-name" placeholder="Your name (optional)">
+      <h3>Welcome to ${FIRM_NAME}</h3>
+      <p>Let's get started. What's your first name?</p>
+      <input type="text" id="law-prechat-name" placeholder="First name *" autocomplete="given-name" required>
       <button id="law-prechat-submit">Start Chat</button>
     </div>
     <div id="law-chat-messages"></div>
@@ -303,7 +302,6 @@
 
   // ─── Element refs ─────────────────────────────────────────────────────────
   const prechatEl = win.querySelector("#law-prechat");
-  const emailInput = win.querySelector("#law-prechat-email");
   const nameInput = win.querySelector("#law-prechat-name");
   const prechatSubmit = win.querySelector("#law-prechat-submit");
   const messagesEl = win.querySelector("#law-chat-messages");
@@ -372,8 +370,13 @@
 
   // ─── Pre-chat form submission ─────────────────────────────────────────────
   async function handlePrechat() {
-    const email = emailInput.value.trim();
-    if (!email) return;
+    const firstName = nameInput.value.trim();
+    if (!firstName) { nameInput.focus(); return; }
+
+    // We don't collect email up front anymore, so fabricate a stable
+    // placeholder so the backend's email-keyed client lookup still works.
+    const syntheticEmail = "chat_" + Date.now() + "_" +
+      Math.random().toString(36).slice(2, 8) + "@roque-chat.local";
 
     prechatSubmit.disabled = true;
     prechatSubmit.textContent = "Connecting...";
@@ -383,8 +386,8 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: email,
-          first_name: nameInput.value.trim() || null,
+          email: syntheticEmail,
+          first_name: firstName,
           channel: "website",
         }),
       });
@@ -397,34 +400,24 @@
       showChatUI();
       saveSession();
 
-      // Greet the user
-      var greeting;
-      if (clientInfo && !clientInfo.is_new && clientInfo.first_name) {
-        greeting = "Welcome back, " + clientInfo.first_name + "! How can I help you today?";
-      } else {
-        greeting = "Hello! Welcome to " + FIRM_NAME + ". How can I assist you today?";
-      }
+      // Professional opening — name is already known, so ask the routing
+      // question directly. The two buttons drive the branch.
+      const greeting = "Hi " + firstName + ", thanks for reaching out to " + FIRM_NAME +
+        ". Are you looking for help with a personal injury or a criminal defense matter?";
       addMessage("bot", greeting);
       messages.push({ role: "assistant", content: greeting });
-
-      // Show suggestions from server (first-time flow)
-      if (data.active_cases && data.active_cases.length > 0) {
-        addSuggestions(["Update on my case", "New matter", "Schedule a consultation", "General question"]);
-      } else {
-        // Will get suggestions from first chat response
-      }
+      addSuggestions(["Personal Injury", "Criminal Defense"]);
 
       saveSession();
-      inputEl.focus();
     } catch (err) {
-      addMessage("bot", "Sorry, I couldn't connect to our system. Please try again.");
+      addMessage("bot", "Sorry, I couldn't connect. Please try again.");
       prechatSubmit.disabled = false;
       prechatSubmit.textContent = "Start Chat";
     }
   }
 
   prechatSubmit.addEventListener("click", handlePrechat);
-  emailInput.addEventListener("keydown", function (e) {
+  nameInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter") { e.preventDefault(); handlePrechat(); }
   });
 
@@ -511,7 +504,6 @@
     // Show pre-chat form again
     prechatEl.classList.remove("law-form-hidden");
     inputRow.classList.add("law-input-hidden");
-    emailInput.value = "";
     nameInput.value = "";
     prechatSubmit.disabled = false;
     prechatSubmit.textContent = "Start Chat";
@@ -543,7 +535,7 @@
     }
 
     if (identified) inputEl.focus();
-    else emailInput.focus();
+    else nameInput.focus();
   }
 
   function closeChat() {

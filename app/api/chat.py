@@ -195,11 +195,11 @@ async def chat(req: ChatRequest) -> ChatResponse:
             "token_count": ai_response.usage.get("total_tokens"),
         })
 
-        # 10. Get suggestions
-        suggestions = get_suggestions(req.practice_area, is_new)
-        # Only show suggestions on first message or when appropriate
-        if len(history) > 3:
-            suggestions = None  # Let the AI conversation flow naturally
+        # 10. Suggestions: disabled. The widget shows its own two-button
+        # "Personal Injury / Criminal Defense" choice on the very first turn,
+        # and after that the LLM drives the conversation — follow-up button
+        # suggestions were cluttering every reply.
+        suggestions = None
 
         return ChatResponse(
             conversation_id=conversation_id,

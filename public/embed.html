@@ -164,10 +164,9 @@
 </div>
 
 <div id="embed-prechat">
-  <h3>Welcome</h3>
-  <p>Enter your email to start a conversation with our AI assistant.</p>
-  <input type="email" id="embed-prechat-email" placeholder="Your email address *" required>
-  <input type="text" id="embed-prechat-name" placeholder="Your name (optional)">
+  <h3>Welcome to Roque Law Firm</h3>
+  <p>Let's get started. What's your first name?</p>
+  <input type="text" id="embed-prechat-name" placeholder="First name *" autocomplete="given-name" required>
   <button id="embed-prechat-submit">Start Chat</button>
 </div>
 
@@ -190,8 +189,10 @@
   const LOOKUP_URL = "/api/clients/lookup";
   const STORAGE_KEY = "law-embed-session";
   const PRACTICE_AREA = "roque_law";
-  const FIRST_MESSAGE = "Hi — were you in an accident or do you need criminal defense help?";
-  const FIRST_SUGGESTIONS = ["I was in an accident", "Criminal Defense"];
+  const FIRST_SUGGESTIONS = ["Personal Injury", "Criminal Defense"];
+  function buildGreeting(firstName) {
+    return "Hi " + firstName + ", thanks for reaching out to Roque Law Firm. Are you looking for help with a personal injury or a criminal defense matter?";
+  }
 
   const messages = [];
   let isWaiting = false;
@@ -200,7 +201,6 @@
   let identified = false;
 
   const prechatEl = document.getElementById("embed-prechat");
-  const emailInput = document.getElementById("embed-prechat-email");
   const nameInput = document.getElementById("embed-prechat-name");
   const prechatSubmit = document.getElementById("embed-prechat-submit");
   const messagesEl = document.getElementById("embed-messages");
@@ -275,29 +275,27 @@
   function hideTyping() { var el = document.getElementById("law-typing-indicator"); if (el) el.remove(); }
 
   async function handlePrechat() {
-    const email = emailInput.value.trim();
-    if (!email) return;
+    const firstName = nameInput.value.trim();
+    if (!firstName) { nameInput.focus(); return; }
+    const syntheticEmail = "chat_" + Date.now() + "_" + Math.random().toString(36).slice(2,8) + "@roque-chat.local";
     prechatSubmit.disabled = true;
     prechatSubmit.textContent = "Connecting...";
     try {
       const res = await fetch(LOOKUP_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email, first_name: nameInput.value.trim() || null, channel: "website" }),
+        body: JSON.stringify({ email: syntheticEmail, first_name: firstName, channel: "website" }),
       });
       const data = await res.json();
       clientInfo = data.client;
       conversationId = data.conversation_id;
       identified = true;
       showChatUI();
-      var greeting = (clientInfo && !clientInfo.is_new && clientInfo.first_name)
-        ? "Welcome back, " + clientInfo.first_name + "! " + FIRST_MESSAGE
-        : FIRST_MESSAGE;
+      const greeting = buildGreeting(firstName);
       addMessage("bot", greeting);
       messages.push({ role: "assistant", content: greeting });
       addSuggestions(FIRST_SUGGESTIONS);
       saveSession();
-      inputEl.focus();
     } catch (err) {
       addMessage("bot", "Sorry, couldn't connect. Please try again.");
       prechatSubmit.disabled = false;
@@ -306,7 +304,7 @@
   }
 
   prechatSubmit.addEventListener("click", handlePrechat);
-  emailInput.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); handlePrechat(); } });
+  nameInput.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); handlePrechat(); } });
 
   async function sendMessage(text) {
     if (!text.trim() || isWaiting || !identified) return;
@@ -350,7 +348,7 @@
     clearSession();
     resetConfirm.style.display = "none"; resetBtn.style.display = "";
     prechatEl.classList.remove("hidden"); inputRow.classList.add("hidden");
-    emailInput.value = ""; nameInput.value = "";
+    nameInput.value = "";
     prechatSubmit.disabled = false; prechatSubmit.textContent = "Start Chat";
   }
 
