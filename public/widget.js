@@ -25,7 +25,9 @@
   const PRIMARY_COLOR = scriptTag?.getAttribute("data-primary-color") || "#1e3a5f";
   const PRACTICE_AREA = scriptTag?.getAttribute("data-practice-area") || "immigration";
   const SUBTITLE = scriptTag?.getAttribute("data-subtitle") || "Online - usually replies instantly";
-  const LOGO_URL = scriptTag?.getAttribute("data-logo-url") || "";
+  // Default to the backend-served logo.png. Consumers can override with
+  // data-logo-url to point at their own hosted image.
+  const LOGO_URL = scriptTag?.getAttribute("data-logo-url") || (ORIGIN + "/logo.png");
 
   // ─── State ────────────────────────────────────────────────────────────────
   const messages = [];
@@ -106,6 +108,10 @@
       background: rgba(255,255,255,0.15);
       display: flex; align-items: center; justify-content: center;
       font-size: 18px; flex-shrink: 0;
+    }
+    .law-header-logo {
+      height: 40px; width: auto; max-width: 180px;
+      object-fit: contain; flex-shrink: 0;
     }
     #law-chat-header-text h4 { margin: 0; font-size: 15px; font-weight: 600; }
     #law-chat-header-text p  { margin: 0; font-size: 12px; opacity: 0.85; }
@@ -268,9 +274,10 @@
   win.classList.add("law-hidden");
   win.innerHTML = `
     <div id="law-chat-header">
-      <div class="law-header-icon">${LOGO_URL ? '<img src="' + LOGO_URL + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">' : "\u2696\uFE0F"}</div>
+      ${LOGO_URL
+        ? '<img class="law-header-logo" src="' + LOGO_URL + '" alt="' + FIRM_NAME + '" onerror="this.style.display=\'none\'">'
+        : '<div class="law-header-icon">\u2696\uFE0F</div>'}
       <div id="law-chat-header-text">
-        <h4>${FIRM_NAME}</h4>
         <p>${SUBTITLE}</p>
       </div>
       <button id="law-chat-close" aria-label="Close chat">\u2715</button>
