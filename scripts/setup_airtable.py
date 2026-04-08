@@ -90,7 +90,6 @@ CLIENTS_TABLE = {
             },
         },
         {"name": "Notes", "type": "multilineText"},
-        {"name": "Created", "type": "createdTime", "options": {"result": {"type": "dateTime", "options": {"dateFormat": {"name": "iso"}, "timeFormat": {"name": "24hour"}, "timeZone": "client"}}}},
     ],
 }
 
@@ -121,7 +120,6 @@ CONVERSATIONS_TABLE = {
                 ]
             },
         },
-        {"name": "Started", "type": "createdTime", "options": {"result": {"type": "dateTime", "options": {"dateFormat": {"name": "iso"}, "timeFormat": {"name": "24hour"}, "timeZone": "client"}}}},
     ],
     # Client link is added after Clients table exists
 }
@@ -155,7 +153,6 @@ MESSAGES_TABLE = {
             "type": "checkbox",
             "options": {"icon": "check", "color": "yellowBright"},
         },
-        {"name": "Created At", "type": "createdTime", "options": {"result": {"type": "dateTime", "options": {"dateFormat": {"name": "iso"}, "timeFormat": {"name": "24hour"}, "timeZone": "client"}}}},
     ],
     # Conversation link is added after Conversations table exists
 }
@@ -176,7 +173,7 @@ def create_table(schema):
     if not r.ok:
         print(f"  ERROR {r.status_code}: {r.text}")
         r.raise_for_status()
-    print(f"  ✓ Created '{schema['name']}'")
+    print(f"  [OK] Created '{schema['name']}'")
     return r.json()
 
 
@@ -186,13 +183,13 @@ def create_field(table_id, field):
     if not r.ok:
         print(f"    ERROR {r.status_code}: {r.text}")
         r.raise_for_status()
-    print(f"    ✓ Field '{field['name']}' added")
+    print(f"    [OK] Field '{field['name']}' added")
     return r.json()
 
 
 def ensure_table(schema, existing):
     if schema["name"] in existing:
-        print(f"  ↷ Table '{schema['name']}' already exists, skipping create")
+        print(f"  [skip] Table '{schema['name']}' already exists, skipping create")
         return existing[schema["name"]]
     return create_table(schema)
 
@@ -200,7 +197,7 @@ def ensure_table(schema, existing):
 def ensure_field(table, field):
     existing_fields = {f["name"] for f in table.get("fields", [])}
     if field["name"] in existing_fields:
-        print(f"    ↷ Field '{field['name']}' exists, skipping")
+        print(f"    [skip] Field '{field['name']}' exists, skipping")
         return
     create_field(table["id"], field)
 
@@ -268,7 +265,7 @@ def main():
             },
         )
 
-    print("\n✅ Airtable base is ready. Start the server with:")
+    print("\n[DONE] Airtable base is ready. Start the server with:")
     print("   uvicorn app.main:app --reload")
 
 

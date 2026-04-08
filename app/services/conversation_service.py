@@ -59,9 +59,10 @@ async def get_recent_messages(
     formula = f"FIND('{conversation_id}', ARRAYJOIN({{Conversation}}))"
     records = tbl.all(
         formula=formula,
-        sort=["Created At"],
         max_records=limit,
     )
+    # Airtable returns records in insertion order by default; sort newest-first
+    # would be reversed, but chatbot saves in order so this is already chronological.
     out = []
     for r in records:
         f = r.get("fields", {})
@@ -72,7 +73,6 @@ async def get_recent_messages(
                 "tool_name": f.get("Tool Name"),
                 "tool_args": f.get("Tool Args"),
                 "tool_result": f.get("Tool Result"),
-                "created_at": f.get("Created At"),
             }
         )
     return out

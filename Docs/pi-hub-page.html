@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Houston Personal Injury Lawyer | Roque Law Firm</title>
+<meta name="description" content="Injured in an accident in Houston? Get a free case review. No fee unless we win. Hablamos Español. Call 832-266-3582 now.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- LegalService Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LegalService",
+  "name": "Roque Law Firm - Personal Injury",
+  "description": "Houston personal injury lawyers serving Harris County and greater Houston. Free consultation. No fee unless we win.",
+  "url": "https://roque-law-firm.com/personal-injury/",
+  "telephone": "832-266-3582",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "4101 Washington Ave",
+    "addressLocality": "Houston",
+    "addressRegion": "TX",
+    "postalCode": "77007"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Houston"
+  },
+  "availableLanguage": ["English", "Spanish"]
+}
+</script>
+
+<style>
+  :root {
+    --navy: #08122a;
+    --navy-light: #0f1d3d;
+    --gold: #b19600;
+    --gold-light: #d4b82e;
+    --cream: #ebe2c8;
+    --cream-light: #f5f0e0;
+    --cream-bg: #faf8f2;
+    --white: #ffffff;
+    --dark-text: #1a1a2e;
+    --body-text: #3a3a4a;
+    --muted: #6b6b7b;
+    --border: #e0ddd4;
+    --shadow-sm: 0 2px 8px rgba(8,18,42,0.06);
+    --shadow-md: 0 4px 20px rgba(8,18,42,0.10);
+    --shadow-lg: 0 8px 40px rgba(8,18,42,0.14);
+    --radius: 6px;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Source Sans 3', -apple-system, sans-serif;
+    --max-width: 1200px;
+    --section-pad: clamp(60px, 8vw, 120px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--body-text);
+    line-height: 1.7;
+    font-size: 17px;
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img { max-width: 100%; display: block; }
+  a { text-decoration: none; }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: var(--navy);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--gold);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .logo-text {
+    font-family: var(--font-display);
+    color: var(--cream);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .logo-text span { color: var(--gold); }
+  .header-nav { display: flex; align-items: center; gap: 28px; }
+  .header-nav a {
+    color: var(--cream);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    opacity: 0.85;
+  }
+  .header-nav a:hover { color: var(--gold); opacity: 1; }
+  .header-phone {
+    color: var(--gold) !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    opacity: 1 !important;
+  }
+  .lang-toggle {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .lang-toggle:hover { background: var(--gold); color: var(--navy); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background:
+      linear-gradient(165deg, rgba(8,18,42,0.82) 0%, rgba(8,18,42,0.65) 50%, rgba(8,18,42,0.80) 100%),
+      url('https://roque-law-firm.com/wp-content/uploads/2022/03/Houston-3.jpeg') center/cover no-repeat;
+    padding: clamp(80px, 14vw, 180px) 0 clamp(80px, 12vw, 160px);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 120px;
+    background: linear-gradient(to top, var(--white), transparent);
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 2; }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5.5vw, 68px);
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.12;
+    margin-bottom: 24px;
+    max-width: 780px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: clamp(17px, 2vw, 21px);
+    color: var(--cream);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 32px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 2px solid transparent;
+    letter-spacing: 0.3px;
+  }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--navy);
+    border-color: var(--gold);
+  }
+  .btn-gold:hover {
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(177,150,0,0.3);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border-color: var(--cream);
+  }
+  .btn-outline:hover {
+    background: var(--cream);
+    color: var(--navy);
+    transform: translateY(-2px);
+  }
+  .btn-navy {
+    background: var(--navy);
+    color: var(--cream);
+    border-color: var(--navy);
+  }
+  .btn-navy:hover {
+    background: var(--navy-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* ===== TRUST BAR ===== */
+  .trust-bar {
+    background: var(--navy);
+    border-bottom: 1px solid rgba(177,150,0,0.25);
+    position: relative;
+    z-index: 3;
+  }
+  .trust-bar-inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+  .trust-item {
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--cream);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-right: 1px solid rgba(177,150,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .trust-item:last-child { border-right: none; }
+  .trust-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* ===== SECTION UTILITIES ===== */
+  .section { padding: var(--section-pad) 0; }
+  .section-cream { background: var(--cream-bg); }
+  .section-navy { background: var(--navy); color: var(--cream); }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .section-navy .section-title { color: var(--cream); }
+  .section-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 640px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .section-navy .section-subtitle { color: rgba(235,226,200,0.7); }
+
+  /* ===== INTRO ===== */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-top: 40px;
+  }
+  .intro-text p {
+    margin-bottom: 20px;
+    font-size: 17px;
+    line-height: 1.8;
+  }
+  .intro-text p:last-child { margin-bottom: 0; }
+  .intro-sidebar {
+    background: var(--cream-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    padding: 32px;
+    border-radius: var(--radius);
+  }
+  .intro-sidebar h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .intro-sidebar p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--body-text);
+    margin-bottom: 16px;
+  }
+  .intro-sidebar p:last-child { margin-bottom: 0; }
+
+  /* ===== PRACTICE AREAS ===== */
+  .practice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .practice-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .practice-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .practice-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--gold);
+  }
+  .practice-card:hover::before { transform: scaleX(1); }
+  .practice-card-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 16px;
+    color: var(--gold);
+  }
+  .practice-card h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .practice-card p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .practice-card .card-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+  }
+  .practice-card:hover .card-link { gap: 10px; }
+
+  /* ===== HOW IT WORKS ===== */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 56px;
+    position: relative;
+  }
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 44px;
+    left: 16.66%;
+    right: 16.66%;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0.3;
+  }
+  .step {
+    text-align: center;
+    padding: 0 24px;
+    position: relative;
+  }
+  .step-num {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 3px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+    position: relative;
+    z-index: 2;
+  }
+  .step h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+  .step p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .steps-note {
+    text-align: center;
+    margin-top: 48px;
+    padding: 28px 32px;
+    background: var(--cream-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .steps-note p {
+    font-size: 17px;
+    color: var(--body-text);
+  }
+  .steps-note strong { color: var(--navy); }
+
+  /* ===== KNOW YOUR RIGHTS ===== */
+  .rights-box {
+    background: var(--cream-bg);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 48px;
+    margin-top: 40px;
+  }
+  .right-item {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .right-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .right-item h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .right-check {
+    width: 24px;
+    height: 24px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .right-check svg { width: 14px; height: 14px; fill: var(--navy); }
+  .right-item p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--body-text);
+    padding-left: 36px;
+  }
+
+  /* ===== CHATBOT SECTION ===== */
+  .chatbot-section {
+    background: var(--navy);
+    padding: var(--section-pad) 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .chatbot-section::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(177,150,0,0.06);
+  }
+  .chatbot-header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+  }
+  .chatbot-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 42px);
+    color: var(--cream);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .chatbot-header p {
+    font-size: 17px;
+    color: rgba(235,226,200,0.7);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .chatbot-embed {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 16px 60px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 2;
+    min-height: 500px;
+  }
+  .chatbot-embed iframe {
+    width: 100%;
+    height: 520px;
+    border: none;
+    display: block;
+  }
+  .chatbot-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8f6f0 0%, #fff 100%);
+    min-height: 500px;
+  }
+  .chatbot-placeholder svg {
+    width: 64px; height: 64px;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0.7;
+  }
+  .chatbot-placeholder h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .chatbot-placeholder p {
+    color: var(--muted);
+    max-width: 400px;
+    margin-bottom: 24px;
+  }
+
+  /* ===== LOCATIONS ===== */
+  .location-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .location-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    text-align: center;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+  .location-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .location-card h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .location-card p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .location-card:hover h3 { color: var(--gold); }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .testimonial-card {
+    background: rgba(235,226,200,0.12);
+    border: 1px solid rgba(235,226,200,0.15);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+  }
+  .stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 16px;
+  }
+  .stars svg { width: 18px; height: 18px; fill: var(--gold); }
+  .testimonial-card blockquote {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--cream);
+    margin-bottom: 20px;
+    font-style: italic;
+    opacity: 0.9;
+  }
+  .testimonial-card cite {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gold);
+    font-style: normal;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== FINAL CTA ===== */
+  .final-cta {
+    background:
+      linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: var(--section-pad) 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: rgba(177,150,0,0.04);
+  }
+  .final-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 4vw, 50px);
+    color: var(--cream);
+    font-weight: 600;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .final-cta > .container > p {
+    font-size: 18px;
+    color: rgba(235,226,200,0.75);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+    position: relative;
+    z-index: 2;
+  }
+  .cta-phone-big {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 2;
+    transition: color 0.2s;
+  }
+  .cta-phone-big:hover { color: var(--gold-light); }
+  .contact-form {
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .form-row.full { grid-template-columns: 1fr; }
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 14px 18px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    border: 1px solid rgba(235,226,200,0.2);
+    border-radius: var(--radius);
+    background: rgba(255,255,255,0.06);
+    color: var(--cream);
+    transition: border-color 0.2s;
+  }
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder {
+    color: rgba(235,226,200,0.4);
+  }
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.08);
+  }
+  .contact-form textarea { resize: vertical; min-height: 100px; }
+  .contact-form .btn { width: 100%; justify-content: center; margin-top: 8px; }
+
+  /* ===== FOOTER ===== */
+  .site-footer {
+    background: #050c1e;
+    padding: 48px 0 24px;
+    border-top: 2px solid var(--gold);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .footer-brand .logo-text { font-size: 20px; margin-bottom: 12px; }
+  .footer-brand p { font-size: 14px; color: rgba(235,226,200,0.5); line-height: 1.7; margin-bottom: 16px; }
+  .footer-contact-info { font-size: 14px; color: var(--cream); opacity: 0.7; }
+  .footer-contact-info a { color: var(--gold); }
+  .footer-col h4 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .footer-col a {
+    display: block;
+    font-size: 14px;
+    color: rgba(235,226,200,0.6);
+    padding: 4px 0;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom {
+    border-top: 1px solid rgba(235,226,200,0.1);
+    padding-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: rgba(235,226,200,0.35);
+  }
+
+  /* ===== STICKY BAR ===== */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--navy);
+    border-top: 2px solid var(--gold);
+    padding: 14px 24px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  }
+  .sticky-bar.visible { transform: translateY(0); }
+  .sticky-bar p {
+    color: var(--cream);
+    font-size: 15px;
+    font-weight: 400;
+  }
+  .sticky-bar .btn {
+    padding: 10px 24px;
+    font-size: 13px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 960px) {
+    .header-nav { display: none; }
+    .intro-grid { grid-template-columns: 1fr; gap: 32px; }
+    .steps-grid { grid-template-columns: 1fr; gap: 40px; }
+    .steps-grid::before { display: none; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    .location-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr; }
+    .trust-bar-inner { grid-template-columns: repeat(2, 1fr); }
+    .trust-item { font-size: 12px; padding: 14px 10px; }
+    .form-row { grid-template-columns: 1fr; }
+    .rights-box { padding: 28px 20px; }
+    .right-item p { padding-left: 0; }
+  }
+  @media (max-width: 600px) {
+    .trust-bar-inner { grid-template-columns: 1fr 1fr; }
+    .location-grid { grid-template-columns: 1fr 1fr; }
+    .practice-grid { grid-template-columns: 1fr; }
+    .sticky-bar { flex-direction: column; gap: 10px; padding: 12px 20px; }
+    .sticky-bar p { font-size: 13px; text-align: center; }
+  }
+
+  /* ===== ANIMATIONS ===== */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo-text">Roque <span>Law Firm</span></a>
+    <nav class="header-nav">
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/attorney/">Attorney</a>
+      <a href="/practice-area/">Criminal Defense</a>
+      <a href="/personal-injury/">Personal Injury</a>
+      <a href="/contact/">Contact</a>
+      <a href="tel:832-266-3582" class="header-phone">832-266-3582</a>
+      <button class="lang-toggle" onclick="window.location.href='/es/personal-injury/'">ES</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container hero-content">
+    <h1>Houston Personal Injury Lawyers Who <em>Fight For You</em></h1>
+    <p class="hero-sub">Injured in an accident? You may be owed money for your medical bills, lost wages, and pain. We handle everything so you can focus on getting better.</p>
+    <div class="hero-actions">
+      <a href="tel:832-266-3582" class="btn btn-gold">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call 832-266-3582
+      </a>
+      <a href="#chatbot" class="btn btn-outline">See What Your Case Could Be Worth →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUST BAR ===== -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="trust-item">
+      <svg class="trust-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+      Hablamos Español
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      Free Consultation
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+      No Fee Unless We Win
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+      Available 24/7
+    </div>
+  </div>
+</div>
+
+<!-- ===== INTRO ===== -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="section-label fade-up">About Our Practice</div>
+    <h2 class="section-title fade-up">You Shouldn't Have to Fight the Insurance<br>Company Alone</h2>
+    <div class="intro-grid">
+      <div class="intro-text fade-up">
+        <p>When you're hurt in an accident, everything feels urgent. Medical bills start piling up. You can't work. Insurance companies are calling, asking you to give recorded statements before you even know the full extent of your injuries. It's overwhelming — and it's exactly the situation insurance adjusters are trained to take advantage of.</p>
+        <p>At the Roque Law Firm, we step in so you don't have to face this alone. Attorney Sara Roque built this firm on a simple idea: every person deserves someone in their corner who actually fights for them. That's what we've done for years in criminal defense, and it's what our personal injury team does for accident victims across Harris County and the greater Houston area.</p>
+        <p>Our approach is straightforward. You focus on healing. We handle everything else — the paperwork, the investigation, the negotiations with insurance companies, and if it comes to it, the courtroom. You pay nothing upfront, and you don't owe us a dime unless we recover money for you.</p>
+        <p>We also understand that for many families in Houston, language and immigration concerns can make an already stressful situation feel even harder. Our team is fully bilingual. We serve our Spanish-speaking clients with the same care and attention as every client who walks through our door. Your immigration status will never be a barrier to getting the legal help you deserve.</p>
+      </div>
+      <div class="intro-sidebar fade-up">
+        <h3>Why Clients Trust Us</h3>
+        <p>Sara Roque was born in Mexico City and moved to Houston at age 11. She earned her law degree from the University of Houston Law Center and has been named a Top 40 Under 40 Criminal Defense Attorney in Texas.</p>
+        <p>She built her career on one thing: fighting for people the system is designed to work against. That same energy drives our personal injury practice.</p>
+        <p><strong>Our team speaks English and Spanish fluently.</strong> When you call us, you'll talk to someone who understands your situation — legally and culturally.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRACTICE AREAS ===== -->
+<section class="section section-cream" id="practice-areas">
+  <div class="container">
+    <div class="section-label fade-up">Areas We Handle</div>
+    <h2 class="section-title fade-up">What Type of Accident Were You In?</h2>
+    <p class="section-subtitle fade-up">Every case is different. Click on your situation below to learn how we can help.</p>
+    <div class="practice-grid">
+
+      <a href="/personal-injury/car-accident-lawyer/" class="practice-card fade-up">
+        <svg class="practice-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm10 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M5 17H3v-6l2-5h10l2 5v6h-2m-6 0h-2"/><path d="M5 6l-1.5-3h15L17 6"/></svg>
+        <h3>Car Accidents</h3>
+        <p>The most common accident in Houston. We fight to get you full compensation for your injuries and damages.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+
+      <a href="/personal-injury/truck-accident-lawyer/" class="practice-card fade-up">
+        <svg class="practice-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <h3>Truck Accidents</h3>
+        <p>Collisions with commercial trucks cause severe injuries. We hold trucking companies accountable.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+
+      <a href="/personal-injury/18-wheeler-accident-lawyer/" class="practice-card fade-up">
+        <svg class="practice-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="5" width="15" height="11" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5" cy="18" r="2"/><circle cx="11" cy="18" r="2"/><circle cx="19" cy="18" r="2"/></svg>
+        <h3>18-Wheeler Wrecks</h3>
+        <p>Big rig crashes on I-10 and I-45 carry the highest damages. We know how to build these cases.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+
+      <a href="/personal-injury/motorcycle-accident-lawyer/" class="practice-card fade-up">
+        <svg class="practice-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 14l4-7h6l3 4h1"/><path d="M9 7l1 4h5"/></svg>
+        <h3>Motorcycle Accidents</h3>
+        <p>Riders face unfair bias after a crash. We make sure the evidence tells the real story.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+
+      <a href="/personal-injury/uber-lyft-accident-lawyer/" class="practice-card fade-up">
+        <svg class="practice-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M12 6V4m-4 2V3m8 3V3"/><circle cx="8" cy="15" r="1.5"/><circle cx="16" cy="15" r="1.5"/><path d="M8 10h8"/></svg>
+        <h3>Uber & Lyft Accidents</h3>
+        <p>Rideshare insurance is complicated. We sort out who pays so you don't have to.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+
+      <a href="/personal-injury/pedestrian-bicycle-accident-lawyer/" class="practice-card fade-up">
+        <svg class="practice-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="4" r="2"/><path d="M14 22v-6l2-4-4-2-4 4h4"/><path d="M10 22V16l-3-3"/></svg>
+        <h3>Pedestrian & Bicycle</h3>
+        <p>Houston is one of the most dangerous cities for pedestrians. We fight for victims on foot and on bikes.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+
+      <a href="/personal-injury/wrongful-death-lawyer/" class="practice-card fade-up">
+        <svg class="practice-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <h3>Wrongful Death</h3>
+        <p>When a loved one is taken too soon, your family deserves justice and financial security.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label fade-up">The Process</div>
+      <h2 class="section-title fade-up">Here's How We Help You Get Compensated</h2>
+      <p class="section-subtitle fade-up" style="margin:0 auto">No complicated steps. No upfront costs. Here's what happens when you call us.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step fade-up">
+        <div class="step-num">1</div>
+        <h3>Tell Us What Happened</h3>
+        <p>Call us or use the form on this page. Tell us about your accident — we'll listen, ask a few questions, and let you know if you have a case. It's free and takes about 10 minutes.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">2</div>
+        <h3>We Investigate & Build Your Case</h3>
+        <p>We gather the police report, your medical records, witness statements, and everything else we need. We deal with the insurance companies directly — you never have to talk to them.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">3</div>
+        <h3>You Get Compensated</h3>
+        <p>We negotiate with the insurance company to get you the maximum amount for your injuries, lost wages, and pain. If they won't pay what's fair, we take them to court.</p>
+      </div>
+    </div>
+    <div class="steps-note fade-up">
+      <p><strong>You pay nothing out of pocket.</strong> Our personal injury team works on a contingency fee — meaning we only get paid if we win your case. If we don't recover money for you, you owe us nothing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== KNOW YOUR RIGHTS ===== -->
+<section class="section section-cream" id="rights">
+  <div class="container">
+    <div class="section-label fade-up">Texas Law</div>
+    <h2 class="section-title fade-up">Your Rights After an Accident in Texas</h2>
+    <p class="section-subtitle fade-up">You have protections under Texas law. Knowing them can make or break your case.</p>
+    <div class="rights-box fade-up">
+
+      <div class="right-item">
+        <h3>
+          <span class="right-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          You have the right to choose your own doctor.
+        </h3>
+        <p>The other driver's insurance company cannot tell you which doctor to see. You get to pick the medical providers you trust. And if you can't afford treatment right now, we can connect you with doctors who will treat you now and get paid when your case resolves.</p>
+      </div>
+
+      <div class="right-item">
+        <h3>
+          <span class="right-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          You have the right to refuse a recorded statement.
+        </h3>
+        <p>The other driver's insurance adjuster will call you — sometimes within hours of the accident. They'll ask you to give a recorded statement. You are not required to do this. Anything you say can be used to reduce or deny your claim. Talk to a lawyer before you talk to their insurance company.</p>
+      </div>
+
+      <div class="right-item">
+        <h3>
+          <span class="right-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          You have two years to file.
+        </h3>
+        <p>Texas law gives you two years from the date of the accident to file a personal injury lawsuit. That might sound like a long time, but evidence disappears, witnesses forget details, and medical records need to be gathered. The sooner you call, the stronger your case.</p>
+      </div>
+
+      <div class="right-item">
+        <h3>
+          <span class="right-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          You can still recover even if you were partly at fault.
+        </h3>
+        <p>Texas follows a modified comparative fault rule. As long as you were less than 51% responsible for the accident, you can still recover compensation — it just gets reduced by your percentage of fault. Don't assume you have no case because the accident wasn't 100% the other driver's fault.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHATBOT ===== -->
+<section class="chatbot-section" id="chatbot">
+  <div class="container">
+    <div class="chatbot-header">
+      <div class="section-label" style="color:var(--gold)">Free Case Review</div>
+      <h2>Not Sure If You Have a Case? Let's Find Out.</h2>
+      <p>Answer a few quick questions and our team will review your situation — free, no obligation.</p>
+    </div>
+    <div class="chatbot-embed">
+      <iframe 
+        src="https://sara-law-chatbot.vercel.app" 
+        title="Case Review Chatbot"
+        loading="lazy"
+        id="chatbot-iframe"
+        onerror="this.style.display='none'; document.getElementById('chatbot-fallback').style.display='flex';"
+      ></iframe>
+      <div class="chatbot-placeholder" id="chatbot-fallback" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <h3>Prefer to Talk to a Person?</h3>
+        <p>Our team is available right now to review your case over the phone. No pressure, no obligation.</p>
+        <a href="tel:832-266-3582" class="btn btn-gold">Call 832-266-3582</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LOCATIONS ===== -->
+<section class="section" id="locations">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label fade-up">Our Coverage</div>
+      <h2 class="section-title fade-up">Serving Accident Victims Across Greater Houston</h2>
+      <p class="section-subtitle fade-up" style="margin:0 auto">No matter where your accident happened in the Houston metro area, our team can help. We know the local roads, courts, and hospitals.</p>
+    </div>
+    <div class="location-grid fade-up">
+      <a href="/personal-injury/harris-county/" class="location-card">
+        <h3>Harris County</h3>
+        <p>Houston Metro</p>
+      </a>
+      <a href="/personal-injury/fort-bend-county/" class="location-card">
+        <h3>Fort Bend County</h3>
+        <p>Sugar Land &bull; Missouri City</p>
+      </a>
+      <a href="/personal-injury/montgomery-county/" class="location-card">
+        <h3>Montgomery County</h3>
+        <p>The Woodlands &bull; Conroe</p>
+      </a>
+      <a href="/personal-injury/brazoria-county/" class="location-card">
+        <h3>Brazoria County</h3>
+        <p>Pearland</p>
+      </a>
+      <a href="/personal-injury/galveston-county/" class="location-card">
+        <h3>Galveston County</h3>
+        <p>Galveston &bull; Texas City</p>
+      </a>
+      <a href="/personal-injury/katy/" class="location-card">
+        <h3>Katy</h3>
+        <p>I-10 Corridor</p>
+      </a>
+      <a href="/personal-injury/cypress/" class="location-card">
+        <h3>Cypress</h3>
+        <p>Northwest Houston</p>
+      </a>
+      <a href="/personal-injury/baytown/" class="location-card">
+        <h3>Baytown</h3>
+        <p>East Houston</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section section-navy" id="testimonials">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label fade-up">Real Clients</div>
+      <h2 class="section-title fade-up">What Our Clients Say About Working With Us</h2>
+    </div>
+    <div class="testimonial-grid">
+
+      <div class="testimonial-card fade-up">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <blockquote>"Sara and her team were amazing. They treated me as their family and gave me their support all the time. I was accused of a serious crime that could end up my goals for my future but thanks to Sara and her team my case was dismissed."</blockquote>
+        <cite>— Google Review</cite>
+      </div>
+
+      <div class="testimonial-card fade-up">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <blockquote>"Sara was extremely professional, knowledgeable, and handled my cases as if they were her own. Sara proved my innocence on both cases, resulting in 'Not Guilty' verdicts!"</blockquote>
+        <cite>— Google Review</cite>
+      </div>
+
+      <div class="testimonial-card fade-up">
+        <div class="stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <blockquote>"The best at what she does point blank. Hard working, organized, will put up a fight to the end and won't back down. She got my case dismissed. Everybody said it wasn't possible but she did it."</blockquote>
+        <cite>— Google Review</cite>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="final-cta" id="contact">
+  <div class="container">
+    <h2>Ready to Talk? We're Here.</h2>
+    <p>If you've been hurt in an accident, the worst thing you can do is wait. Insurance companies are already building their case to pay you as little as possible. The sooner you call, the sooner we start protecting your rights.</p>
+    <a href="tel:832-266-3582" class="cta-phone-big">832-266-3582</a>
+    <div class="contact-form">
+      <div class="form-row">
+        <input type="text" placeholder="Your Name" required>
+        <input type="tel" placeholder="Phone Number" required>
+      </div>
+      <div class="form-row full">
+        <input type="email" placeholder="Email (optional)">
+      </div>
+      <div class="form-row full">
+        <textarea placeholder="Briefly tell us what happened..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-gold">Get Your Free Case Review</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-text">Roque <span>Law Firm</span></div>
+        <p>Helping people all over Harris County fight for what they deserve. Criminal defense and personal injury representation in Houston, TX.</p>
+        <div class="footer-contact-info">
+          4101 Washington Ave, Houston, TX 77007<br>
+          Phone: <a href="tel:832-266-3582">832-266-3582</a><br>
+          Email: <a href="mailto:sararoquelaw@gmail.com">sararoquelaw@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Personal Injury</h4>
+        <a href="/personal-injury/car-accident-lawyer/">Car Accidents</a>
+        <a href="/personal-injury/truck-accident-lawyer/">Truck Accidents</a>
+        <a href="/personal-injury/18-wheeler-accident-lawyer/">18-Wheeler Wrecks</a>
+        <a href="/personal-injury/motorcycle-accident-lawyer/">Motorcycle Accidents</a>
+        <a href="/personal-injury/uber-lyft-accident-lawyer/">Uber & Lyft Accidents</a>
+        <a href="/personal-injury/pedestrian-bicycle-accident-lawyer/">Pedestrian & Bicycle</a>
+        <a href="/personal-injury/wrongful-death-lawyer/">Wrongful Death</a>
+      </div>
+      <div class="footer-col">
+        <h4>Service Areas</h4>
+        <a href="/personal-injury/harris-county/">Harris County</a>
+        <a href="/personal-injury/fort-bend-county/">Fort Bend County</a>
+        <a href="/personal-injury/montgomery-county/">Montgomery County</a>
+        <a href="/personal-injury/brazoria-county/">Brazoria County</a>
+        <a href="/personal-injury/galveston-county/">Galveston County</a>
+        <a href="/personal-injury/katy/">Katy</a>
+        <a href="/personal-injury/cypress/">Cypress</a>
+        <a href="/personal-injury/baytown/">Baytown</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Roque Law Firm. All rights reserved. | <a href="/es/personal-injury/" style="color:var(--gold)">En Español</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== STICKY BAR ===== -->
+<div class="sticky-bar" id="stickyBar">
+  <p>Injured in an accident? Find out if you have a case.</p>
+  <a href="#chatbot" class="btn btn-gold">Check My Case</a>
+</div>
+
+<script>
+// ===== Sticky bar: show after scroll, hide near chatbot =====
+const stickyBar = document.getElementById('stickyBar');
+const chatbotSection = document.getElementById('chatbot');
+
+function updateStickyBar() {
+  const scrollY = window.scrollY;
+  const windowH = window.innerHeight;
+  const chatbotRect = chatbotSection.getBoundingClientRect();
+  const chatbotVisible = chatbotRect.top < windowH && chatbotRect.bottom > 0;
+  
+  if (scrollY > 400 && !chatbotVisible) {
+    stickyBar.classList.add('visible');
+  } else {
+    stickyBar.classList.remove('visible');
+  }
+}
+window.addEventListener('scroll', updateStickyBar, { passive: true });
+updateStickyBar();
+
+// ===== Fade-up on scroll =====
+const fadeEls = document.querySelectorAll('.fade-up');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('in-view'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+fadeEls.forEach(el => observer.observe(el));
+
+// ===== Chatbot iframe fallback =====
+const iframe = document.getElementById('chatbot-iframe');
+iframe.addEventListener('error', () => {
+  iframe.style.display = 'none';
+  document.getElementById('chatbot-fallback').style.display = 'flex';
+});
+// Also check after load timeout
+setTimeout(() => {
+  try {
+    if (iframe.contentDocument && iframe.contentDocument.title === '') {
+      // Might not be loaded
+    }
+  } catch(e) {
+    // Cross-origin, that's fine — means it loaded something
+  }
+}, 5000);
+</script>
+
+</body>
+</html>
