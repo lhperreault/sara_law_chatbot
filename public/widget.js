@@ -123,29 +123,6 @@
     }
     #law-chat-close:hover { opacity: 1; }
 
-    /* Pre-chat form */
-    #law-prechat {
-      padding: 24px 20px; background: #f8fafc;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex; flex-direction: column; gap: 12px;
-    }
-    #law-prechat h3 { margin: 0; font-size: 17px; font-weight: 700; color: #1e293b; }
-    #law-prechat p { margin: 0; font-size: 13px; color: #64748b; line-height: 1.4; }
-    #law-prechat input {
-      padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
-      font-size: 14px; font-family: inherit; outline: none;
-    }
-    #law-prechat input:focus { border-color: ${PRIMARY_COLOR}; }
-    #law-prechat-submit {
-      background: ${PRIMARY_COLOR}; color: #fff; border: none;
-      border-radius: 8px; padding: 10px; font-size: 14px;
-      cursor: pointer; font-family: inherit; font-weight: 600;
-      transition: opacity 0.15s;
-    }
-    #law-prechat-submit:hover { opacity: 0.9; }
-    #law-prechat-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-    #law-prechat.law-form-hidden { display: none; }
-
     /* Messages */
     #law-chat-messages {
       flex: 1; overflow-y: auto; padding: 16px;
@@ -225,7 +202,9 @@
       padding: 9px 13px; font-size: 16px; outline: none;
       resize: none; font-family: inherit; line-height: 1.4;
       max-height: 90px; overflow-y: auto;
+      color: #0f172a;
     }
+    #law-chat-input::placeholder { color: #94a3b8; }
     #law-chat-input:focus { border-color: ${PRIMARY_COLOR}; }
     #law-chat-send {
       background: ${PRIMARY_COLOR}; color: #fff; border: none;
@@ -283,14 +262,8 @@
       </div>
       <button id="law-chat-close" aria-label="Close chat">\u2715</button>
     </div>
-    <div id="law-prechat">
-      <h3>Welcome to ${FIRM_NAME}</h3>
-      <p>Let's get started. What's your first name?</p>
-      <input type="text" id="law-prechat-name" placeholder="First name *" autocomplete="given-name" required>
-      <button id="law-prechat-submit">Start Chat</button>
-    </div>
     <div id="law-chat-messages"></div>
-    <div id="law-chat-input-row" class="law-input-hidden">
+    <div id="law-chat-input-row">
       <textarea id="law-chat-input" rows="1" placeholder="Type a message..."></textarea>
       <button id="law-chat-send" aria-label="Send">\u27A4</button>
     </div>
@@ -309,9 +282,6 @@
   mountTarget.appendChild(win);
 
   // ─── Element refs ─────────────────────────────────────────────────────────
-  const prechatEl = win.querySelector("#law-prechat");
-  const nameInput = win.querySelector("#law-prechat-name");
-  const prechatSubmit = win.querySelector("#law-prechat-submit");
   const messagesEl = win.querySelector("#law-chat-messages");
   const inputRow = win.querySelector("#law-chat-input-row");
   const inputEl = win.querySelector("#law-chat-input");
@@ -320,11 +290,6 @@
   const resetConfirm = win.querySelector("#law-reset-confirm");
 
   // ─── UI helpers ───────────────────────────────────────────────────────────
-  function showChatUI() {
-    prechatEl.classList.add("law-form-hidden");
-    inputRow.classList.remove("law-input-hidden");
-  }
-
   function addMessage(role, text) {
     if (role === "user") {
       const div = document.createElement("div");
@@ -334,7 +299,7 @@
     } else {
       const row = document.createElement("div");
       row.className = "law-msg-row";
-      row.innerHTML = '<div class="law-msg-avatar">AI</div>';
+      row.innerHTML = '<div class="law-msg-avatar">R</div>';
       const msgBubble = document.createElement("div");
       msgBubble.className = "law-msg law-msg-bot";
       msgBubble.textContent = text;
@@ -366,7 +331,7 @@
     const row = document.createElement("div");
     row.className = "law-typing-row";
     row.id = "law-typing-indicator";
-    row.innerHTML = '<div class="law-msg-avatar">AI</div><div class="law-typing"><span></span><span></span><span></span></div>';
+    row.innerHTML = '<div class="law-msg-avatar">R</div><div class="law-typing"><span></span><span></span><span></span></div>';
     messagesEl.appendChild(row);
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
@@ -376,28 +341,20 @@
     if (el) el.remove();
   }
 
-  // ─── Pre-chat form submission ─────────────────────────────────────────────
-  async function handlePrechat() {
-    const firstName = nameInput.value.trim();
-    if (!firstName) { nameInput.focus(); return; }
+  // ─── Auto-initialize conversation on first open ───────────────────────────
+  // No pre-chat form — the widget opens, creates a client record silently,
+  // and immediately shows the first bot message asking for name + category.
+  async function initConversation() {
+    if (identified) return;
 
-    // We don't collect email up front anymore, so fabricate a stable
-    // placeholder so the backend's email-keyed client lookup still works.
     const syntheticEmail = "chat_" + Date.now() + "_" +
       Math.random().toString(36).slice(2, 8) + "@roque-chat.local";
-
-    prechatSubmit.disabled = true;
-    prechatSubmit.textContent = "Connecting...";
 
     try {
       const res = await fetch(LOOKUP_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: syntheticEmail,
-          first_name: firstName,
-          channel: "website",
-        }),
+        body: JSON.stringify({ email: syntheticEmail, channel: "website" }),
       });
       const data = await res.json();
 
@@ -405,29 +362,16 @@
       conversationId = data.conversation_id;
       identified = true;
 
-      showChatUI();
-      saveSession();
-
-      // Professional opening — name is already known, so ask the routing
-      // question directly. The two buttons drive the branch.
-      const greeting = "Hi " + firstName + ", thanks for reaching out to " + FIRM_NAME +
-        ". Are you looking for help with a personal injury or a criminal defense matter?";
+      const greeting = "Hi! What's your name, and are you reaching out about a personal injury or a criminal defense matter?";
       addMessage("bot", greeting);
       messages.push({ role: "assistant", content: greeting });
       addSuggestions(["Personal Injury", "Criminal Defense"]);
-
       saveSession();
+      inputEl.focus();
     } catch (err) {
-      addMessage("bot", "Sorry, I couldn't connect. Please try again.");
-      prechatSubmit.disabled = false;
-      prechatSubmit.textContent = "Start Chat";
+      addMessage("bot", "Sorry, I couldn't connect. Please refresh and try again.");
     }
   }
-
-  prechatSubmit.addEventListener("click", handlePrechat);
-  nameInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") { e.preventDefault(); handlePrechat(); }
-  });
 
   // ─── Send message ─────────────────────────────────────────────────────────
   async function sendMessage(text) {
@@ -487,10 +431,6 @@
     conversationId = saved.conversationId;
     identified = saved.identified;
 
-    if (identified) {
-      showChatUI();
-    }
-
     if (saved.messages) {
       saved.messages.forEach(function (msg) {
         messages.push(msg);
@@ -509,12 +449,8 @@
     clearSession();
     resetConfirm.style.display = "none";
     resetBtn.style.display = "";
-    // Show pre-chat form again
-    prechatEl.classList.remove("law-form-hidden");
-    inputRow.classList.add("law-input-hidden");
-    nameInput.value = "";
-    prechatSubmit.disabled = false;
-    prechatSubmit.textContent = "Start Chat";
+    // Start a fresh conversation immediately.
+    initConversation();
   }
 
   resetBtn.addEventListener("click", function () {
@@ -534,16 +470,15 @@
     bubble.innerHTML = '<span style="font-size:28px;color:#fff;">\u2715</span>';
 
     if (!identified) {
-      // Check for saved session
       var saved = loadSession();
       if (saved && saved.identified) {
         restoreSession(saved);
+      } else {
+        initConversation();
       }
-      // Otherwise show the pre-chat form
     }
 
-    if (identified) inputEl.focus();
-    else nameInput.focus();
+    inputEl.focus();
   }
 
   function closeChat() {
