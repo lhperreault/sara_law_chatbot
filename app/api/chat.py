@@ -3,6 +3,7 @@ POST /api/chat — Main chat endpoint.
 Handles the full conversation loop: client lookup, context building,
 AI response, tool execution, and memory management.
 """
+import asyncio
 import json
 from fastapi import APIRouter, HTTPException
 
@@ -12,6 +13,15 @@ from app.ai.factory import get_ai_provider
 from app.prompts.base import build_system_prompt, get_suggestions
 from app.tools.definitions import TOOLS
 from app.services import client_service, conversation_service, case_service
+
+
+def _fire_and_forget(coro):
+    """Schedule an Airtable write without blocking the response."""
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(coro)
+    except RuntimeError:
+        pass
 
 router = APIRouter()
 
@@ -56,18 +66,14 @@ async def chat(req: ChatRequest) -> ChatResponse:
             )
             conversation_id = convo["id"]
 
-        # 3. Load the full conversation history from Airtable (sorted by Sequence).
-        # Vercel lambdas are stateless, so we never keep an in-memory buffer —
-        # every message gets persisted immediately before this read.
-        db_messages = await conversation_service.get_recent_messages(conversation_id, limit=50)
-        history = [{"role": m["role"], "content": m["content"]} for m in db_messages]
-
-        # Persist the incoming user message RIGHT NOW so the next read sees it,
-        # then append to in-request history.
-        await conversation_service.save_messages(
-            conversation_id,
-            [{"role": "user", "content": req.message}],
-        )
+        # 3. Build message history. The WIDGET is the source of truth — it sends
+        # the full conversation with every request. Backend is stateless compute.
+        history: list[dict] = []
+        if req.history:
+            for m in req.history:
+                if m.role in ("user", "assistant") and m.content:
+                    history.append({"role": m.role, "content": m.content})
+        # Current user message always goes on the end.
         history.append({"role": "user", "content": req.message})
 
         # 4. Get active cases for context
@@ -115,14 +121,17 @@ async def chat(req: ChatRequest) -> ChatResponse:
                     "content": json.dumps(result),
                 })
 
-                # Persist tool call as a message
-                await conversation_service.save_messages(conversation_id, [{
-                    "role": "tool",
-                    "content": json.dumps(result),
-                    "tool_name": tc["name"],
-                    "tool_args": tc["arguments"],
-                    "tool_result": result,
-                }])
+                # Log tool call to Airtable in the background
+                _fire_and_forget(conversation_service.save_messages(
+                    conversation_id,
+                    [{
+                        "role": "tool",
+                        "content": json.dumps(result),
+                        "tool_name": tc["name"],
+                        "tool_args": tc["arguments"],
+                        "tool_result": result,
+                    }],
+                ))
 
             # Second AI call with tool results (unless flagged for review)
             if not requires_review:
@@ -180,15 +189,22 @@ async def chat(req: ChatRequest) -> ChatResponse:
         else:
             reply_text = ai_response.content or "I'm sorry, I couldn't generate a response. Please try again."
 
-        # 9. Persist the assistant reply (user message was already saved above).
-        await conversation_service.save_messages(conversation_id, [{
-            "role": "assistant",
-            "content": reply_text,
-            "requires_review": requires_review,
-            "ai_provider": ai_response.provider,
-            "ai_model": ai_response.model,
-            "token_count": ai_response.usage.get("total_tokens"),
-        }])
+        # 9. Log the user + assistant pair to Airtable in the background. Not
+        # awaited so the HTTP response isn't blocked on the Airtable round-trip.
+        _fire_and_forget(conversation_service.save_messages(
+            conversation_id,
+            [
+                {"role": "user", "content": req.message},
+                {
+                    "role": "assistant",
+                    "content": reply_text,
+                    "requires_review": requires_review,
+                    "ai_provider": ai_response.provider,
+                    "ai_model": ai_response.model,
+                    "token_count": ai_response.usage.get("total_tokens"),
+                },
+            ],
+        ))
 
         # 10. Suggestions: disabled. The widget shows its own two-button
         # "Personal Injury / Criminal Defense" choice on the very first turn,

@@ -8,11 +8,20 @@ from uuid import UUID
 
 # ─── Chat ────────────────────────────────────────────────────────────────────
 
+class ChatMessage(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str
+
+
 class ChatRequest(BaseModel):
     conversation_id: Optional[str] = None
     client_email: str
     message: str
-    practice_area: str = "immigration"
+    practice_area: str = "roque_law"
+    # Client-side full history — the widget is the source of truth for memory,
+    # the backend just builds the prompt and calls the LLM. Airtable writes
+    # happen in the background for logging only.
+    history: Optional[List[ChatMessage]] = None
 
 
 class ClientInfo(BaseModel):

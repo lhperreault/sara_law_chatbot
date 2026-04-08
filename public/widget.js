@@ -395,6 +395,15 @@
     showTyping();
 
     try {
+      // Send the full client-side history so the backend is stateless and
+      // the LLM always sees the complete conversation. Exclude the just-
+      // pushed user message from history (it's passed separately as `message`)
+      // and drop the very first seeded greeting nothing if desired.
+      const historyToSend = messages
+        .slice(0, -1)
+        .filter(function (m) { return m && (m.role === "user" || m.role === "assistant") && m.content; })
+        .map(function (m) { return { role: m.role, content: m.content }; });
+
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -403,6 +412,7 @@
           client_email: clientInfo.email,
           message: text.trim(),
           practice_area: PRACTICE_AREA,
+          history: historyToSend,
         }),
       });
       const data = await res.json();
