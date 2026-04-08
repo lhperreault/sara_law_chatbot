@@ -365,10 +365,12 @@
       conversationId = data.conversation_id;
       identified = true;
 
-      const greeting = "Hi! What's your name, and are you reaching out about a personal injury or a criminal defense matter?";
+      const greeting =
+        "Hello \uD83D\uDC4B! Welcome to The Roque Law Firm.\n" +
+        "I'm here to answer any questions, guide you in handling your personal injury or criminal defense, and connect you with our team \u2014 usually takes less than 2 minutes!\n\n" +
+        "Before we dive in\u2026 what's your first name?";
       addMessage("bot", greeting);
       messages.push({ role: "assistant", content: greeting });
-      addSuggestions(["Personal Injury", "Criminal Defense"]);
       saveSession();
       inputEl.focus();
     } catch (err) {
