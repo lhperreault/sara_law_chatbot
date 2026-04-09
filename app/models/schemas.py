@@ -72,6 +72,38 @@ class LeadResponse(BaseModel):
     error: Optional[str] = None
 
 
+# ─── Settlement Calculator ───────────────────────────────────────────────────
+
+class CalculatorSubmission(BaseModel):
+    language: str = "en"
+    type_of_accident: Optional[str] = None
+    other_party_fault_pct: Optional[int] = None
+    current_medical_bills: Optional[float] = 0
+    future_medical: Optional[float] = 0
+    property_damage: Optional[float] = 0
+    lost_wages: Optional[float] = 0
+    future_lost_earnings: Optional[float] = 0
+    additional_losses: List[str] = []
+    injury_severity: Optional[str] = None
+    impact_factors: List[str] = []
+    estimated_low: Optional[float] = None
+    estimated_high: Optional[float] = None
+    page_url: Optional[str] = None
+
+
+class CalculatorContactUpdate(BaseModel):
+    submission_id: str
+    name: str
+    phone: str
+    email: Optional[str] = None
+
+
+class CalculatorResponse(BaseModel):
+    ok: bool
+    id: Optional[str] = None
+    error: Optional[str] = None
+
+
 # ─── AI Provider ─────────────────────────────────────────────────────────────
 
 class AIChatResponse(BaseModel):

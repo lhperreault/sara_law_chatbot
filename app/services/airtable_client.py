@@ -28,3 +28,7 @@ def conversations_table():
 
 def messages_table():
     return get_api().table(settings.airtable_base_id, settings.airtable_messages_table)
+
+
+def calculator_table():
+    return get_api().table(settings.airtable_base_id, "Calculator Submissions")
