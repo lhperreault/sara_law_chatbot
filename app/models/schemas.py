@@ -56,6 +56,22 @@ class ClientLookupResponse(BaseModel):
     conversation_id: Optional[str] = None
 
 
+# ─── Website Form Lead ───────────────────────────────────────────────────────
+
+class LeadRequest(BaseModel):
+    name: str
+    phone: str
+    email: Optional[str] = None
+    message: Optional[str] = None
+    source: str = "Website Form"
+
+
+class LeadResponse(BaseModel):
+    ok: bool
+    id: Optional[str] = None
+    error: Optional[str] = None
+
+
 # ─── AI Provider ─────────────────────────────────────────────────────────────
 
 class AIChatResponse(BaseModel):
