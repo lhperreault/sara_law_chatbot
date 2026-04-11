@@ -572,57 +572,83 @@
   // Clicking the tooltip or bubble opens the full chat. Dismissing the
   // tooltip (X) hides it but keeps the bubble. Once per session.
   const TEASER_KEY = "law-chat-teaser-shown";
+  var teaserDismissed = false;  // user explicitly clicked X
+  var teaserRound = 0;         // how many times we've shown the teaser (max 3)
+
+  var TEASER_MESSAGES = [
+    "Hello! \uD83D\uDC4B Get help from our <strong>live agent</strong>.",
+    "Still have questions? We're here to help \u2014 <strong>free & confidential</strong>.",
+    "Don't wait \u2014 get a <strong>free case review</strong> in under 2 minutes."
+  ];
 
   function hideTeaser() {
     teaser.classList.remove("law-teaser-visible");
   }
 
-  function showTeaser() {
-    try { if (sessionStorage.getItem(TEASER_KEY)) return; } catch {}
-    try { sessionStorage.setItem(TEASER_KEY, "1"); } catch {}
-
-    // Bounce the bubble
+  function bounceBubble() {
+    bubble.classList.remove("law-bouncing");
+    // Force reflow so the animation restarts
+    void bubble.offsetWidth;
     bubble.classList.add("law-bouncing");
-    bubble.addEventListener("animationend", function () {
-      bubble.classList.remove("law-bouncing");
-    }, { once: true });
+  }
 
-    // Show the tooltip
+  function showTeaser() {
+    // Stop if: chat is open, user dismissed, or we've shown all 3 rounds
+    if (isOpen || teaserDismissed || teaserRound >= 3) return;
+
+    var msg = TEASER_MESSAGES[teaserRound] || TEASER_MESSAGES[0];
+    teaserRound++;
+
+    // Update message text (keep the close button)
+    teaser.innerHTML =
+      '<button id="law-chat-teaser-close" aria-label="Dismiss">&times;</button>' +
+      '<div style="margin-right:14px;">' + msg + '</div>';
+
+    // Re-bind close button since we replaced innerHTML
+    teaser.querySelector("#law-chat-teaser-close").addEventListener("click", function (e) {
+      e.stopPropagation();
+      teaserDismissed = true;
+      hideTeaser();
+    });
+
+    // Bounce + show tooltip
+    bounceBubble();
     teaser.classList.add("law-teaser-visible");
 
-    // Auto-dismiss after 8 seconds if not clicked
+    // Auto-hide after 8 seconds, then schedule next round if applicable
     setTimeout(function () {
-      if (teaser.classList.contains("law-teaser-visible") && !isOpen) {
-        hideTeaser();
+      if (!isOpen) hideTeaser();
+      // Schedule next round after 15 seconds (if rounds remain)
+      if (teaserRound < 3 && !isOpen && !teaserDismissed) {
+        setTimeout(showTeaser, 15000);
       }
     }, 8000);
   }
 
   // Clicking the teaser opens chat
   teaser.addEventListener("click", function (e) {
-    if (e.target.id === "law-chat-teaser-close") {
-      e.stopPropagation();
-      hideTeaser();
-      return;
-    }
+    if (e.target.id === "law-chat-teaser-close") return; // handled above
+    teaserDismissed = true;
     hideTeaser();
     openChat();
   });
 
-  // Hide teaser when chat opens (via bubble click or any other trigger)
-  var origOpenChat = openChat;
-  // openChat is a function declaration so we can't reassign it — instead,
-  // hook the bubble click to also hide teaser.
-  bubble.addEventListener("click", function () { hideTeaser(); });
+  // Hide teaser when chat opens via bubble click
+  bubble.addEventListener("click", function () {
+    teaserDismissed = true;
+    hideTeaser();
+  });
 
-  // Fire the teaser 3 seconds after load
-  function schedulTeaser() {
+  // Fire the first teaser 3 seconds after load (once per session)
+  function scheduleTeaser() {
+    try { if (sessionStorage.getItem(TEASER_KEY)) return; } catch {}
+    try { sessionStorage.setItem(TEASER_KEY, "1"); } catch {}
     setTimeout(showTeaser, 3000);
   }
   if (document.readyState === "complete" || document.readyState === "interactive") {
-    schedulTeaser();
+    scheduleTeaser();
   } else {
-    window.addEventListener("DOMContentLoaded", schedulTeaser);
+    window.addEventListener("DOMContentLoaded", scheduleTeaser);
   }
 
   inputEl.addEventListener("keydown", function (e) {
