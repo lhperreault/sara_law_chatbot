@@ -30,6 +30,13 @@
   const LOGO_URL = scriptTag?.getAttribute("data-logo-url") || (ORIGIN + "/logo.png");
   const BUBBLE_LOGO_URL = scriptTag?.getAttribute("data-bubble-logo-url") || (ORIGIN + "/logo-bubble.png");
 
+  // Language detection — Spanish if the URL contains /es/
+  const IS_SPANISH = (function () {
+    var p = (location.pathname || "").toLowerCase();
+    return p.indexOf("/es/") !== -1 || p.indexOf("/espanol") !== -1;
+  })();
+  const LANG = IS_SPANISH ? "es" : "en";
+
   // ─── State ────────────────────────────────────────────────────────────────
   const messages = [];
   let isOpen = false;
@@ -350,6 +357,13 @@
   const resetBtn = win.querySelector("#law-reset-btn");
   const resetConfirm = win.querySelector("#law-reset-confirm");
 
+  // Apply Spanish labels to static UI elements if needed
+  if (IS_SPANISH) {
+    inputEl.setAttribute("placeholder", "Escribe un mensaje...");
+    var subtitleEl = win.querySelector("#law-chat-header-text p");
+    if (subtitleEl) subtitleEl.textContent = "En l\u00EDnea - gratis y confidencial";
+  }
+
   // ─── UI helpers ───────────────────────────────────────────────────────────
   function addMessage(role, text) {
     if (role === "user") {
@@ -423,10 +437,13 @@
       conversationId = data.conversation_id;
       identified = true;
 
-      const greeting =
-        "Hello \uD83D\uDC4B! Welcome to The Roque Law Firm.\n" +
-        "I'm here to answer any questions, guide you in handling your personal injury or criminal defense, and connect you with our team \u2014 usually takes less than 2 minutes!\n\n" +
-        "Before we dive in\u2026 what's your first name?";
+      const greeting = IS_SPANISH
+        ? "\u00A1Hola \uD83D\uDC4B! Bienvenido a The Roque Law Firm.\n" +
+          "Estoy aqu\u00ED para responder sus preguntas, guiarlo en su caso de lesi\u00F3n personal o defensa criminal, y conectarlo con nuestro equipo \u2014 \u00A1generalmente toma menos de 2 minutos!\n\n" +
+          "Antes de comenzar\u2026 \u00BFcu\u00E1l es su nombre?"
+        : "Hello \uD83D\uDC4B! Welcome to The Roque Law Firm.\n" +
+          "I'm here to answer any questions, guide you in handling your personal injury or criminal defense, and connect you with our team \u2014 usually takes less than 2 minutes!\n\n" +
+          "Before we dive in\u2026 what's your first name?";
       addMessage("bot", greeting);
       messages.push({ role: "assistant", content: greeting });
       saveSession();
@@ -470,6 +487,7 @@
           client_email: clientInfo.email,
           message: text.trim(),
           practice_area: PRACTICE_AREA,
+          language: LANG,
           history: historyToSend,
         }),
       });
@@ -575,11 +593,17 @@
   var teaserDismissed = false;  // user explicitly clicked X
   var teaserRound = 0;         // how many times we've shown the teaser (max 3)
 
-  var TEASER_MESSAGES = [
-    "Hello! \uD83D\uDC4B Get help from our <strong>live agent</strong>.",
-    "Still have questions? We're here to help \u2014 <strong>free & confidential</strong>.",
-    "Don't wait \u2014 get a <strong>free case review</strong> in under 2 minutes."
-  ];
+  var TEASER_MESSAGES = IS_SPANISH
+    ? [
+        "\u00A1Hola! \uD83D\uDC4B Obtenga ayuda de nuestro <strong>agente en vivo</strong>.",
+        "\u00BFTiene preguntas? Estamos aqu\u00ED para ayudar \u2014 <strong>gratis y confidencial</strong>.",
+        "No espere \u2014 obtenga una <strong>revisi\u00F3n de caso gratis</strong> en menos de 2 minutos."
+      ]
+    : [
+        "Hello! \uD83D\uDC4B Get help from our <strong>live agent</strong>.",
+        "Still have questions? We're here to help \u2014 <strong>free & confidential</strong>.",
+        "Don't wait \u2014 get a <strong>free case review</strong> in under 2 minutes."
+      ];
 
   function hideTeaser() {
     teaser.classList.remove("law-teaser-visible");

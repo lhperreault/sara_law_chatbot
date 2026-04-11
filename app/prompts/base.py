@@ -10,6 +10,7 @@ def build_system_prompt(
     is_new: bool = True,
     active_cases: Optional[List[Dict[str, Any]]] = None,
     knowledge_entries: Optional[List[Dict[str, Any]]] = None,
+    language: str = "en",
 ) -> str:
     """
     Build the full system prompt for a given practice area and client context.
@@ -30,10 +31,21 @@ def build_system_prompt(
     # Build knowledge context
     knowledge_context = _build_knowledge_context(knowledge_entries)
 
-    return SYSTEM_PROMPT_TEMPLATE.format(
+    prompt = SYSTEM_PROMPT_TEMPLATE.format(
         client_context=client_context,
         knowledge_context=knowledge_context,
     )
+
+    # If the visitor is on a Spanish page, prepend a hard language directive.
+    if language == "es":
+        prompt = (
+            "CRITICAL LANGUAGE RULE: The visitor is on the Spanish version of the website. "
+            "You MUST conduct the ENTIRE conversation in Spanish — every reply, every question, "
+            "every closing message. Do NOT switch to English unless the visitor explicitly "
+            "writes to you in English first.\n\n"
+        ) + prompt
+
+    return prompt
 
 
 def get_suggestions(practice_area: str, is_new: bool) -> List[str]:

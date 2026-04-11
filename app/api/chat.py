@@ -85,6 +85,7 @@ async def chat(req: ChatRequest) -> ChatResponse:
             client=client,
             is_new=is_new,
             active_cases=active_cases,
+            language=req.language or "en",
         )
 
         # 6. Call AI provider

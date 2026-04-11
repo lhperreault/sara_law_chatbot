@@ -22,6 +22,7 @@ class ChatRequest(BaseModel):
     # the backend just builds the prompt and calls the LLM. Airtable writes
     # happen in the background for logging only.
     history: Optional[List[ChatMessage]] = None
+    language: str = "en"  # "en" or "es" — detected client-side from URL
 
 
 class ClientInfo(BaseModel):
