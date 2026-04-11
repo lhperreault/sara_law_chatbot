@@ -83,8 +83,58 @@
       #law-chat-bubble { width: 64px; height: 64px; font-size: 28px; }
     }
     #law-chat-bubble:hover { transform: scale(1.08); }
+    @keyframes law-bubble-bounce {
+      0%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-14px); }
+      50% { transform: translateY(-6px); }
+      70% { transform: translateY(-10px); }
+    }
+    #law-chat-bubble.law-bouncing { animation: law-bubble-bounce .6s ease 2; }
     #law-chat-bubble img {
       width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    }
+
+    /* Teaser tooltip */
+    #law-chat-teaser {
+      position: fixed !important;
+      bottom: 120px !important; right: 24px !important;
+      top: auto !important; left: auto !important;
+      z-index: 2147483646 !important;
+      background: #fff;
+      color: #1e293b;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px; font-weight: 500;
+      line-height: 1.4;
+      padding: 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      max-width: 240px;
+      cursor: pointer;
+      opacity: 0; transform: translateY(10px) scale(0.95);
+      transition: opacity .3s ease, transform .3s ease;
+      pointer-events: none;
+    }
+    #law-chat-teaser.law-teaser-visible {
+      opacity: 1; transform: translateY(0) scale(1);
+      pointer-events: all;
+    }
+    #law-chat-teaser::after {
+      content: '';
+      position: absolute; bottom: -7px; right: 30px;
+      width: 14px; height: 14px;
+      background: #fff;
+      transform: rotate(45deg);
+      box-shadow: 3px 3px 6px rgba(0,0,0,0.06);
+    }
+    #law-chat-teaser-close {
+      position: absolute; top: 4px; right: 8px;
+      background: none; border: none;
+      color: #aaa; font-size: 16px; cursor: pointer;
+      line-height: 1; padding: 2px 4px;
+    }
+    #law-chat-teaser-close:hover { color: #666; }
+    @media (max-width: 640px) {
+      #law-chat-teaser { bottom: 96px !important; max-width: 200px; font-size: 13px; padding: 10px 14px; }
     }
     #law-chat-window {
       position: fixed !important;
@@ -277,11 +327,19 @@
     </div>
   `;
 
+  // Teaser tooltip — floats above the bubble to grab attention
+  const teaser = document.createElement("div");
+  teaser.id = "law-chat-teaser";
+  teaser.innerHTML =
+    '<button id="law-chat-teaser-close" aria-label="Dismiss">&times;</button>' +
+    '<div style="margin-right:14px;">Hello! \uD83D\uDC4B Get help from our <strong>live agent</strong>.</div>';
+
   // Append to <html> rather than <body> so we escape any ancestor with
   // `transform`, `filter`, `perspective`, or `will-change` set — those make
   // `position: fixed` anchor to the ancestor's box instead of the viewport.
   const mountTarget = document.documentElement || document.body;
   mountTarget.appendChild(bubble);
+  mountTarget.appendChild(teaser);
   mountTarget.appendChild(win);
 
   // ─── Element refs ─────────────────────────────────────────────────────────
@@ -510,21 +568,61 @@
   win.querySelector("#law-chat-close").addEventListener("click", closeChat);
   sendBtn.addEventListener("click", function () { sendMessage(inputEl.value); });
 
-  // Auto-open on desktop once per tab session. Skips mobile (<= 640px) and
-  // does not re-trigger if the visitor has already opened or dismissed it.
-  const AUTO_OPEN_KEY = "law-chat-auto-opened";
-  function maybeAutoOpen() {
-    try {
-      if (sessionStorage.getItem(AUTO_OPEN_KEY)) return;
-    } catch {}
-    if (window.matchMedia && window.matchMedia("(max-width: 640px)").matches) return;
-    try { sessionStorage.setItem(AUTO_OPEN_KEY, "1"); } catch {}
-    setTimeout(openChat, 1200); // small delay so the page renders first
+  // Teaser: after 3s, bounce the bubble and show a small tooltip.
+  // Clicking the tooltip or bubble opens the full chat. Dismissing the
+  // tooltip (X) hides it but keeps the bubble. Once per session.
+  const TEASER_KEY = "law-chat-teaser-shown";
+
+  function hideTeaser() {
+    teaser.classList.remove("law-teaser-visible");
+  }
+
+  function showTeaser() {
+    try { if (sessionStorage.getItem(TEASER_KEY)) return; } catch {}
+    try { sessionStorage.setItem(TEASER_KEY, "1"); } catch {}
+
+    // Bounce the bubble
+    bubble.classList.add("law-bouncing");
+    bubble.addEventListener("animationend", function () {
+      bubble.classList.remove("law-bouncing");
+    }, { once: true });
+
+    // Show the tooltip
+    teaser.classList.add("law-teaser-visible");
+
+    // Auto-dismiss after 8 seconds if not clicked
+    setTimeout(function () {
+      if (teaser.classList.contains("law-teaser-visible") && !isOpen) {
+        hideTeaser();
+      }
+    }, 8000);
+  }
+
+  // Clicking the teaser opens chat
+  teaser.addEventListener("click", function (e) {
+    if (e.target.id === "law-chat-teaser-close") {
+      e.stopPropagation();
+      hideTeaser();
+      return;
+    }
+    hideTeaser();
+    openChat();
+  });
+
+  // Hide teaser when chat opens (via bubble click or any other trigger)
+  var origOpenChat = openChat;
+  // openChat is a function declaration so we can't reassign it — instead,
+  // hook the bubble click to also hide teaser.
+  bubble.addEventListener("click", function () { hideTeaser(); });
+
+  // Fire the teaser 3 seconds after load
+  function schedulTeaser() {
+    setTimeout(showTeaser, 3000);
   }
   if (document.readyState === "complete" || document.readyState === "interactive") {
-    maybeAutoOpen();
+    schedulTeaser();
   } else {
-    window.addEventListener("DOMContentLoaded", maybeAutoOpen);
+    window.addEventListener("DOMContentLoaded", schedulTeaser);
   }
 
   inputEl.addEventListener("keydown", function (e) {
